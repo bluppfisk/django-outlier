@@ -1,1 +1,1 @@
-web: gunicorn outlier.wsgi
+web: gunicorn outlier.wsgi --log-file -
