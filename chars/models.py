@@ -6,7 +6,7 @@ class Source(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
     # file = models.FileField()
-    file = S3DirectField(dest='sources')
+    file = S3DirectField(dest='sources', max_length=255)
     offset = models.IntegerField(default=0)
 
     def __str__(self):
