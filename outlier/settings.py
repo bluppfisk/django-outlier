@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    's3direct',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,3 +137,46 @@ MEDIA_ROOT = 'uploads'
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+AWS_STORAGE_BUCKET_NAME = 'outlier-lingistics'
+
+S3DIRECT_REGION = 'eu-west-2'
+
+# Destinations, with the following keys:
+#
+# key [required] Where to upload the file to, can be either:
+#     1. '/' = Upload to root with the original filename.
+#     2. 'some/path' = Upload to some/path with the original filename.
+#     3. functionName = Pass a function and create your own path/filename.
+# key_args [optional] Arguments to be passed to 'key' if it's a function.
+# auth [optional] An ACL function to whether the current Django user can perform this action.
+# allowed [optional] List of allowed MIME types.
+# acl [optional] Give the object another ACL rather than 'public-read'.
+# cache_control [optional] Cache control headers, eg 'max-age=2592000'.
+# content_disposition [optional] Useful for sending files as attachments.
+# bucket [optional] Specify a different bucket for this particular object.
+# server_side_encryption [optional] Encryption headers for buckets that require it.
+
+S3DIRECT_DESTINATIONS = {
+    'sources': {
+        # REQUIRED
+        'key': 'uploads/sources',
+
+        # OPTIONAL
+        'auth': lambda u: u.is_staff,  # Default allow anybody to upload
+        'allowed': ['application/pdf'],  # Default allow all mime types
+        'bucket': 'outlier-linguistics',  # Default is 'AWS_STORAGE_BUCKET_NAME'
+        'acl': 'private',  # Defaults to 'public-read'
+        'cache_control': 'max-age=2592000',  # Default no cache-control
+        'content_disposition': 'attachment',  # Default no content disposition
+        'content_length_range': (5000, 200000000),  # Default allow any size
+        'server_side_encryption': 'AES256',  # Default no encryption
+    },
+    'example_other': {
+        'key': lambda filename, args: args + '/' + filename,
+        'key_args': 'uploads/images',  # Only if 'key' is a function
+    }
+}

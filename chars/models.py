@@ -1,10 +1,12 @@
 from django.db import models
+from s3direct.fields import S3DirectField
 
 
 class Source(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
-    file = models.FileField()
+    # file = models.FileField()
+    file = S3DirectField(dest='sources')
     offset = models.IntegerField(default=0)
 
     def __str__(self):
