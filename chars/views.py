@@ -8,11 +8,16 @@ from .models import Char
 
 class IndexView(generic.ListView):
     template_name = "chars/index.html"
-    context_object_name = "chars"
-    model = Char
+    context_object_name = "recent_chars"
+
+    def get_queryset(self):
+        return Char.objects.all().order_by('-id')[:10]
 
 
 def search(request):
+    if request.POST["char"] == "":
+        return HttpResponseRedirect(reverse('chars:index'))
+
     return HttpResponseRedirect(reverse('chars:results', args=(request.POST["char"],)))
 
 
@@ -20,7 +25,6 @@ class ResultsView(generic.ListView):
     template_name = "chars/results.html"
     context_object_name = "chars"
     slug_field = 'name'
-    model = Char
 
     def get_queryset(self):
         char = self.kwargs['slug']
