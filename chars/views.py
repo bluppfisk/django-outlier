@@ -1,8 +1,11 @@
-from django.shortcuts import get_list_or_404
+from django.shortcuts import get_list_or_404, render
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+# from django.template import RequestContext
+from django.contrib.admin.views.decorators import staff_member_required
 
+from .admin import BulkUpload
 from .models import Char
 
 
@@ -31,3 +34,36 @@ class ResultsView(generic.ListView):
         object_list = get_list_or_404(Char, name=char)
 
         return object_list
+
+
+@staff_member_required
+def bulk_view(request):
+    if request.method == "POST":
+        form = BulkUpload(request.POST, request.FILES)
+
+        if form.is_valid():
+            # file = request.FILES['file']
+            # data = file.read()
+            data = form.save()
+
+            context = {"form": form, "error": "Success", "data": data}
+            return render(
+                request,
+                'admin/bulk.html',
+                context
+            )
+        else:
+            context = {"form": form, "error": "Invalid form"}
+            return render(
+                request,
+                'admin/bulk.html',
+                context
+            )
+    else:
+        form = BulkUpload()
+        context = {"form": form}
+        return render(
+            request,
+            'admin/bulk.html',
+            context
+        )

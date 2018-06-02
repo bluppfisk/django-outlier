@@ -1,0 +1,30 @@
+{% extends 'admin/base_site.html' %}
+{% load i18n %}
+{% block title %}Import CSV {{ block.super }}{%endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+	<a href="../">Home</a>
+</div>
+{% endblock %}
+
+{% block content_title %}<h1>Import</h1>{% endblock %}
+{% block content %}<div id="content-main">
+	{% if error %}
+		{{ error }}
+	{% endif %}
+<h2>Import CSV Data</h2>
+<form action="{% url 'chars:bulk' %}" method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="Import">
+</form>
+</div>
+{% if data %}
+{% for datum in data %}
+	<b>{{ datum.char.name }}</b><br />
+	on page {{ datum.location }} in {{ datum.source.title }}<br />
+{% endfor %}
+{% endif %}
+
+{% endblock %}
