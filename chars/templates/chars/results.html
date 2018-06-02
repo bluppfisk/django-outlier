@@ -1,0 +1,13 @@
+{% if chars %}
+<ul>
+	{% for char in chars %}
+	<li>
+		{{ char }}
+		{% for location in char.charinsource_set.all %}
+			{% with source=location.source %}
+			<a href="{{ source.file }}#page={{ location.page|add:source.offset }}">{{ source.title }} (p{{ location.page }})</a>
+			{% endwith %}
+		{% endfor %}
+	</li>
+	{% endfor %}
+{% endif %}

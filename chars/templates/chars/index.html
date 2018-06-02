@@ -1,0 +1,5 @@
+<form action="{% url 'chars:search' %}" method="post">
+	{% csrf_token %}
+	<input type="text" name="char" placeholder="Look up a character">
+	<input type="submit" value="Look up">
+</form>
