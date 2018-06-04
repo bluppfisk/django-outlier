@@ -3,5 +3,6 @@ Django==2.0.6
 django-s3direct==1.0.4
 gunicorn==19.8.1
 psycopg2-binary==2.7.4
+python-decouple==3.1
 pytz==2018.4
 whitenoise==3.3.1
