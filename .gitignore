@@ -4,6 +4,6 @@ uploads/*
 bin/
 lib/
 include/
-**/static
+outlier/static/*
 pip-selfcheck.json
 .env
