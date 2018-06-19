@@ -1,12 +1,6 @@
 from django.contrib import admin
-# from django.contrib.admin import widgets
 from django import forms
-from django.db import models
-import io
-
-import csv
-
-from .models import Char, Source, CharInSource
+from .models import Char, Source, CharInSource, AltChar
 
 
 class LocationInline(admin.TabularInline):
@@ -14,9 +8,15 @@ class LocationInline(admin.TabularInline):
     extra = 3
 
 
+class AltCharInline(admin.TabularInline):
+    model = AltChar
+    extra = 3
+
+
 class CharAdmin(admin.ModelAdmin):
     inlines = [
         LocationInline,
+        AltCharInline,
     ]
 
 
@@ -25,8 +25,6 @@ class BulkUpload(forms.Form):
     source = forms.ModelChoiceField(queryset=Source.objects.all())
 
     def save(self):
-        # print(dir(self.cleaned_data['file']))
-        # handle = open(self.cleaned_data['file'], 'rb')
         file = self.cleaned_data['file']
         source = self.cleaned_data['source']
         file.seek(0)
@@ -35,13 +33,12 @@ class BulkUpload(forms.Form):
             data = line.decode('utf-8').split(',')
             name = data[0]
             if len(name) > 1:
-                continue
+                continue  # any faulty characters
             page = data[1].split('\n')[0]
 
             char = Char(name=name)
             char.save()
             location = CharInSource(source=source, page=page, char=char)
-            # char.location.set(location)
             location.save()
 
             to_be_added.append({
@@ -54,4 +51,5 @@ class BulkUpload(forms.Form):
 
 
 admin.site.register(Char, CharAdmin)
+admin.site.register(AltChar)
 admin.site.register(Source)

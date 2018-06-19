@@ -1,5 +1,9 @@
 from django.db import models
 from s3direct.fields import S3DirectField
+from glue64.fields import Glue64Field
+from django.conf import settings
+import boto3
+import base64
 
 
 class Source(models.Model):
@@ -16,11 +20,41 @@ class Source(models.Model):
 
 
 class Char(models.Model):
-    name = models.CharField(max_length=2)
+    name = models.CharField(max_length=1)
     location = models.ManyToManyField(Source, through='CharInSource')
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ('name',)
+
+
+class AltChar(models.Model):
+    name = models.CharField(max_length=255, default="")
+    canonical = models.ForeignKey(Char, on_delete=models.DO_NOTHING)
+    location = models.ForeignKey(Source, default=1, on_delete=models.DO_NOTHING)
+    page = models.IntegerField(default=0)
+    image = Glue64Field()
+
+    def __str__(self):
+        return self.name + "*"
+
+    def save(self, *args, **kwargs):
+        s3 = boto3.resource(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+        )
+
+        print(s3)
+
+        filename = "{}.png".format(self.canonical.name)
+        data = base64.b64decode(self.image.replace("data:image/png;base64,", ""))
+
+        s3.Object(settings.AWS_STORAGE_BUCKET_NAME, "uploads/altchars/" + filename).put(Body=data)
+        self.image = "https://s3.eu-west-2.amazonaws.com/outlier-linguistics/uploads/altchars/" + filename
+        super(AltChar, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ('name',)

@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'glue64',
     's3direct',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -178,6 +179,12 @@ S3DIRECT_DESTINATIONS = {
         'content_disposition': 'inline',  # Default no content disposition
         'content_length_range': (5000, 200000000),  # Default allow any size
         'server_side_encryption': 'AES256',  # Default no encryption
+    },
+    'altchars': {
+        'key': 'uploads/altchars',
+        'allowed': ['image/jpeg', 'image/png'],
+        'bucket': 'outlier-linguistics',
+        'cache_control': 'max-age=2592000',  # Default no cache-control
     },
     'example_other': {
         'key': lambda filename, args: args + '/' + filename,
