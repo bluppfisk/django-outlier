@@ -9,7 +9,7 @@
 			{% with source=location.source %}
 			<a href="{{ source.file }}#page={{ location.page|add:source.offset }}">{{ source.title }} (p{{ location.page }})</a>
 			{% if char.altchar_set.count > 0 %}
-				<h2>Alts ({{ char.altchar_set.count }})</h2>
+				<h2>Historical forms ({{ char.altchar_set.count }})</h2>
 				<ul>
 					{% for altchar in char.altchar_set.all %}
 						<li>

@@ -33,6 +33,8 @@ class Char(models.Model):
 class AltChar(models.Model):
     name = models.CharField(max_length=255, default="")
     canonical = models.ForeignKey(Char, on_delete=models.DO_NOTHING)
+    sequence_no = models.IntegerField(default=0)
+    source_obj = models.CharField(max_length=255, default="")
     location = models.ForeignKey(Source, default=1, on_delete=models.DO_NOTHING)
     page = models.IntegerField(default=0)
     image = Glue64Field()
@@ -41,17 +43,24 @@ class AltChar(models.Model):
         return self.name + "*"
 
     def save(self, *args, **kwargs):
-        s3 = boto3.resource(
-            's3',
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
-        )
+        if "data:image/png;base64" in self.image:
+            s3 = boto3.resource(
+                's3',
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+            )
 
-        filename = "{} from {} in {} p{}.png".format(self.name, self.canonical.name, self.location.title, self.page)
-        data = base64.b64decode(self.image.replace("data:image/png;base64,", ""))
+            filename = "{}-evolution-{}-{}-{}-{}.png".format(
+                self.canonical.name,
+                self.sequence_no,
+                self.location.title,
+                self.page,
+                self.source_obj
+            )
+            data = base64.b64decode(self.image.replace("data:image/png;base64,", ""))
 
-        s3.Object(settings.AWS_STORAGE_BUCKET_NAME, "uploads/altchars/" + filename).put(Body=data)
-        self.image = "https://s3.eu-west-2.amazonaws.com/outlier-linguistics/uploads/altchars/" + filename
+            s3.Object(settings.AWS_STORAGE_BUCKET_NAME, "uploads/altchars/" + filename).put(Body=data)
+            self.image = "https://s3.eu-west-2.amazonaws.com/outlier-linguistics/uploads/altchars/" + filename
         super(AltChar, self).save(*args, **kwargs)
 
     class Meta:
