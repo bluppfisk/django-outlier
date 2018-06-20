@@ -2,8 +2,7 @@ from django.db import models
 from s3direct.fields import S3DirectField
 from glue64.fields import Glue64Field
 from django.conf import settings
-import boto3
-import base64
+from .utils import StorageHandler
 
 
 class Source(models.Model):
@@ -37,31 +36,47 @@ class AltChar(models.Model):
     source_obj = models.CharField(max_length=255, default="")
     location = models.ForeignKey(Source, default=1, on_delete=models.DO_NOTHING)
     page = models.IntegerField(default=0)
-    image = Glue64Field()
+    path = "uploads/altchars/"
+    image = Glue64Field(dest=path)
+
+    __original_image = None
 
     def __str__(self):
-        return self.name + "*"
+        return self.canonical.name + " (hist)"
+
+    def __init__(self, *args, **kwargs):
+        super(AltChar, self).__init__(*args, **kwargs)
+        self.__original_image = self.image
 
     def save(self, *args, **kwargs):
+        filename = "{}-evolution-{}-{}-{}-{}.png".format(
+            self.canonical.name,
+            self.sequence_no,
+            self.location.title,
+            self.page,
+            self.source_obj
+        )
+
         if "data:image/png;base64" in self.image:
-            s3 = boto3.resource(
-                's3',
-                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
-            )
+            # freshly pasted: upload
+            StorageHandler.base64_to_s3(self.image, self.path, filename)
 
-            filename = "{}-evolution-{}-{}-{}-{}.png".format(
-                self.canonical.name,
-                self.sequence_no,
-                self.location.title,
-                self.page,
-                self.source_obj
-            )
-            data = base64.b64decode(self.image.replace("data:image/png;base64,", ""))
+        self.image = filename
 
-            s3.Object(settings.AWS_STORAGE_BUCKET_NAME, "uploads/altchars/" + filename).put(Body=data)
-            self.image = "https://s3.eu-west-2.amazonaws.com/outlier-linguistics/uploads/altchars/" + filename
+        if self.__original_image != self.image and self.__original_image != "":
+            # rename file on S3 if data changed
+            original_filename = self.__original_image.split("/")[-1:][0]
+            StorageHandler.rename_object(original_filename, filename)
+
         super(AltChar, self).save(*args, **kwargs)
+        self.__original_image = self.image
+
+    def delete(self, *args, **kwargs):
+        StorageHandler.delete_object(self.path + self.image)
+        super(AltChar, self).delete(*args, **kwargs)
+
+    def get_full_image_path(self):
+        return settings.AWS_ACCESS_URL + settings.AWS_STORAGE_BUCKET_NAME + "/" + self.path + self.image
 
     class Meta:
         ordering = ('name',)

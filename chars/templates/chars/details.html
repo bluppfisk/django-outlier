@@ -1,0 +1,24 @@
+{% extends "chars/base.html" %}
+{% block content %}
+{% if char %}
+<h2>{{ char.name }} details</h2>
+<h3>Found in {{ char.charinsource_set.count }} resource{{ char.charinsource_set.count|pluralize }}</h3>
+	<ul>
+	{% for location in char.charinsource_set.all %}
+		{% with source=location.source %}
+		<li><a href="{{ source.file }}#page={{ location.page|add:source.offset }}">{{ source.title }} (p{{ location.page }})</a></li>
+		{% endwith %}
+	{% endfor %}
+	</ul>
+	{% with forms=char.altchar_set.count %}
+		<h3>We have {{ forms }} historical form{{ forms|pluralize }}</h3>
+		<ul>
+			{% for altchar in char.altchar_set.all %}
+				<li>
+					{{ altchar.name }} <img src="{{ altchar.get_full_image_path }}" class="results-altchar-img">
+				</li>
+			{% endfor %}
+		</ul>
+	{% endwith %}
+{% endif %}
+{% endblock content %}

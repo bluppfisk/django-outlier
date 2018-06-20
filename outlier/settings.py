@@ -141,11 +141,10 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-
+AWS_ACCESS_URL = config('AWS_ACCESS_URL', "https://s3.eu-west-2.amazonaws.com")
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-
-AWS_STORAGE_BUCKET_NAME = config('S3_BUCKET')
+AWS_STORAGE_BUCKET_NAME = config('S3_BUCKET', "outlier-linguistics")
 S3DIRECT_REGION = config('S3_REGION')
 
 # Destinations, with the following keys:

@@ -4,7 +4,7 @@ import os
 from django.forms import widgets
 from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
-
+from django.conf import settings
 
 class Glue64Widget(widgets.TextInput):
     class Media:
@@ -23,16 +23,19 @@ class Glue64Widget(widgets.TextInput):
         }
 
     def __init__(self, *args, **kwargs):
+        self.dest = kwargs.pop('dest', None)
         super(Glue64Widget, self).__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None, **kwargs):
+        image_url = "{}/{}/{}".format(
+            settings.AWS_ACCESS_URL, settings.AWS_STORAGE_BUCKET_NAME, self.dest + value
+        ) if value else None
         tpl = os.path.join('glue64', 'glue64-widget.tpl')
-        print(value)
         output = render_to_string(tpl, {
             'element_id': self.build_attrs(attrs).get('id', '') if attrs else '',
-            'base_data': value or '',
+            'filename': value or '',
+            'image_url': image_url,
             'name': name,
-            'style': self.build_attrs(attrs).get('style', '') if attrs else '',
         })
 
         return mark_safe(output)
