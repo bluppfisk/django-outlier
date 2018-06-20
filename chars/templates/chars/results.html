@@ -1,3 +1,5 @@
+{% extends "chars/base.html" %}
+{% block content %}
 {% if chars %}
 <ul>
 	{% for char in chars %}
@@ -6,8 +8,19 @@
 		{% for location in char.charinsource_set.all %}
 			{% with source=location.source %}
 			<a href="{{ source.file }}#page={{ location.page|add:source.offset }}">{{ source.title }} (p{{ location.page }})</a>
+			{% if char.altchar_set.count > 0 %}
+				<h2>Alts ({{ char.altchar_set.count }})</h2>
+				<ul>
+					{% for altchar in char.altchar_set.all %}
+						<li>
+							{{ altchar.name }} <img src="{{ altchar.image }}" class="results-altchar-img">
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
 			{% endwith %}
 		{% endfor %}
 	</li>
 	{% endfor %}
 {% endif %}
+{% endblock content %}

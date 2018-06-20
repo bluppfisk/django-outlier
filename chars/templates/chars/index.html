@@ -1,3 +1,5 @@
+{% extends "chars/base.html" %}
+{% block content %}
 <form action="{% url 'chars:search' %}" method="post">
 	{% csrf_token %}
 	<input type="text" name="char" placeholder="Look up a character">
@@ -8,7 +10,7 @@
 <ul>
 	{% for char in recent_chars %}
 	<li>
-		<a href="{% url 'chars:results' char.name %}">{{ char }}</a>
+		<a href="{% url 'chars:results' char.name %}">{{ char }}</a> ({{ char.altchar_set.count }} alts)
 		{% for location in char.charinsource_set.all %}
 			{% with source=location.source %}
 			<a href="{{ source.file }}#page={{ location.page|add:source.offset }}">{{ source.title }} (p{{ location.page }})</a>
@@ -17,3 +19,4 @@
 	</li>
 	{% endfor %}
 {% endif %}
+{% endblock content %}

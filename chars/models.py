@@ -47,9 +47,7 @@ class AltChar(models.Model):
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
         )
 
-        print(s3)
-
-        filename = "{}.png".format(self.canonical.name)
+        filename = "{} from {} in {} p{}.png".format(self.name, self.canonical.name, self.location.title, self.page)
         data = base64.b64decode(self.image.replace("data:image/png;base64,", ""))
 
         s3.Object(settings.AWS_STORAGE_BUCKET_NAME, "uploads/altchars/" + filename).put(Body=data)
