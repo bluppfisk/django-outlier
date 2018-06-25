@@ -6,7 +6,7 @@ from .utils import StorageHandler
 
 
 class Source(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, unique=True)
     author = models.CharField(max_length=200)
     file = S3DirectField(dest='sources', max_length=255)
     offset = models.IntegerField(default=0)
@@ -19,7 +19,7 @@ class Source(models.Model):
 
 
 class Char(models.Model):
-    name = models.CharField(max_length=1)
+    name = models.CharField(max_length=1, unique=True)
     location = models.ManyToManyField(Source, through='CharInSource')
 
     def __str__(self):
@@ -27,6 +27,15 @@ class Char(models.Model):
 
     class Meta:
         ordering = ('name',)
+
+
+class CharInSource(models.Model):
+    source = models.ForeignKey(Source, on_delete=models.CASCADE)
+    char = models.ForeignKey(Char, on_delete=models.CASCADE)
+    page = models.IntegerField()
+
+    def __str__(self):
+        return str(self.page)
 
 
 class AltChar(models.Model):
@@ -80,12 +89,3 @@ class AltChar(models.Model):
 
     class Meta:
         ordering = ('name',)
-
-
-class CharInSource(models.Model):
-    source = models.ForeignKey(Source, on_delete=models.CASCADE)
-    char = models.ForeignKey(Char, on_delete=models.CASCADE)
-    page = models.IntegerField()
-
-    def __str__(self):
-        return str(self.page)

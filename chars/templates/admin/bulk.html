@@ -10,21 +10,22 @@
 
 {% block content_title %}<h1>Import</h1>{% endblock %}
 {% block content %}<div id="content-main">
-	{% if error %}
-		{{ error }}
-	{% endif %}
 <h2>Import CSV Data</h2>
+Each line should contain a pair of character and page number, separated by a comma. File encoding should be UTF-8.
 <form action="{% url 'chars:bulk' %}" method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 	{{ form.as_p }}
 	<input type="submit" value="Import">
 </form>
 </div>
+<h2>Imported data</h2>
 {% if data %}
 {% for datum in data %}
 	<b>{{ datum.char.name }}</b><br />
 	on page {{ datum.location }} in {{ datum.source.title }}<br />
 {% endfor %}
+{% else %}
+No new data imported
 {% endif %}
 
 {% endblock %}

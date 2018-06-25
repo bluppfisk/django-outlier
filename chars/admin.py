@@ -36,16 +36,23 @@ class BulkUpload(forms.Form):
                 continue  # any faulty characters
             page = data[1].split('\n')[0]
 
-            char = Char(name=name)
-            char.save()
-            location = CharInSource(source=source, page=page, char=char)
-            location.save()
+            char, c_created = Char.objects.get_or_create(
+                name=name,
+            )
+            print(char)
 
-            to_be_added.append({
-                'source': location.source,
-                'location': location.page,
-                'char': char
-            })
+            location, l_created = CharInSource.objects.get_or_create(
+                source=source,
+                page=page,
+                char=char
+            )
+
+            if l_created or c_created:
+                to_be_added.append({
+                    'source': location.source,
+                    'location': location.page,
+                    'char': char
+                })
 
         return to_be_added
 
