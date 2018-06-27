@@ -3,9 +3,49 @@ from django.views import generic
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
+from rest_framework import generics
+from rest_framework.response import Response
+# from rest_framework.permissions import IsAdminUser
+
+from .serializers import CharSerializer, SummarySerializer, SingleCharSerializer, SourceSerializer
 
 from .admin import BulkUpload
-from .models import Char
+from .models import Char, Source
+
+
+class CharListAPIView(generics.ListAPIView):
+    queryset = Char.objects.all()
+
+    def list(self, request):
+        qset = self.get_queryset()
+
+        sources = []
+        for i in qset:
+            for j in i.location.all():
+                if j not in sources:
+                    sources.append(j)
+
+        data = CharSerializer(qset, many=True).data
+        sources = SourceSerializer(sources, many=True).data
+        return Response({
+            'chars': data,
+            'sources': sources,
+        })
+
+
+class CharAPIView(generics.RetrieveAPIView):
+    queryset = Char.objects.all()
+
+    def retrieve(self, *args, **kwargs):
+        lookup_field = "name"
+        instance = self.get_object()
+        char = CharSerializer(instance).data
+        sources = [SourceSerializer(m).data for m in [i for i in instance.location.all()]]
+
+        return Response({
+            'char': char,
+            'sources': sources,
+        })
 
 
 class IndexView(generic.ListView):
