@@ -1,0 +1,6 @@
+<div id="search-component">
+	<mat-icon>search</mat-icon>
+	<mat-form-field>
+  		<input matInput #searchBox id="search-box" (keyup.enter)="search(searchBox.value)" placeholder="Find character" />
+  </mat-form-field>
+</div>

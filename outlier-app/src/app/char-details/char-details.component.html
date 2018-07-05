@@ -1,0 +1,17 @@
+<div *ngIf="char; else char_404">
+	<h2>{{ char.name }} Details</h2>
+	<div><span>id: </span><b>{{ char.id }}</b></div>
+	<div><span>name: </span><b>{{ char.name }}</b></div>
+	<h2 *ngIf="char.locations">Locations</h2>
+	<div *ngFor="let location of char.locations">
+		{{ location.source }} on page {{ location.page }}
+	</div>
+	<h2 *ngIf="char.altchars">Historical Forms</h2>
+	<div *ngFor="let altchar of char.altchars">
+		<img src="{{ altchar.image }}">
+	</div>
+	<button (click)="save()">Save</button>
+</div>
+<ng-template #char_404>
+	<h2>Char not found</h2>
+</ng-template>
