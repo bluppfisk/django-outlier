@@ -7,7 +7,7 @@ import { CharDetailsComponent } from './char-details/char-details.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { OutlierNavComponent } from './outlier-nav/outlier-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
-import { MatInputModule, MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatSortModule } from '@angular/material';
+import { MatSelectModule, MatInputModule, MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatSortModule, MatExpansionModule } from '@angular/material';
 import { OutlierDashComponent } from './outlier-dash/outlier-dash.component';
 import { OutlierTableComponent } from './outlier-table/outlier-table.component';
 
@@ -33,6 +33,7 @@ const appRoutes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     LayoutModule,
+    MatSelectModule,
     MatInputModule,
     MatToolbarModule,
     MatButtonModule,
@@ -45,6 +46,7 @@ const appRoutes: Routes = [
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    MatExpansionModule,
     HttpClientModule,
     RouterModule.forRoot(appRoutes)
   ],

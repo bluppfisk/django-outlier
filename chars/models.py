@@ -45,8 +45,7 @@ class AltChar(models.Model):
     source_obj = models.CharField(max_length=255, default="")
     location = models.ForeignKey(Source, default=1, on_delete=models.DO_NOTHING)
     page = models.IntegerField(default=0)
-    path = "uploads/altchars/"
-    image = Glue64Field(dest=path)
+    image = Glue64Field(dest=settings.ALTCHAR_PATH)
 
     __original_image = None
 
@@ -68,7 +67,7 @@ class AltChar(models.Model):
 
         if "data:image/png;base64" in self.image:
             # freshly pasted: upload
-            StorageHandler.base64_to_s3(self.image, self.path, filename)
+            StorageHandler.base64_to_s3(self.image, settings.ALTCHAR_PATH, filename)
 
         self.image = filename
 
@@ -81,11 +80,16 @@ class AltChar(models.Model):
         self.__original_image = self.image
 
     def delete(self, *args, **kwargs):
-        StorageHandler.delete_object(self.path + self.image)
+        StorageHandler.delete_object(settings.ALTCHAR_PATH + self.image)
         super(AltChar, self).delete(*args, **kwargs)
 
     def get_full_image_path(self):
-        return settings.AWS_ACCESS_URL + settings.AWS_STORAGE_BUCKET_NAME + "/" + self.path + self.image
+        return "{}{}/{}{}".format(
+            settings.AWS_ACCESS_URL,
+            settings.AWS_STORAGE_BUCKET_NAME,
+            settings.ALTCHAR_PATH,
+            self.image
+        )
 
     class Meta:
         ordering = ('name',)

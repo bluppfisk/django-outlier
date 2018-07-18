@@ -7,10 +7,10 @@ from rest_framework import generics
 from rest_framework.response import Response
 # from rest_framework.permissions import IsAdminUser
 
-from .serializers import CharSerializer, SummarySerializer, SingleCharSerializer, SourceSerializer
+from .serializers import CharSerializer, SourceSerializer
 
 from .admin import BulkUpload
-from .models import Char, Source
+from .models import Char
 
 
 class CharListAPIView(generics.ListAPIView):
@@ -35,10 +35,16 @@ class CharListAPIView(generics.ListAPIView):
 
 class CharAPIView(generics.RetrieveAPIView):
     queryset = Char.objects.all()
+    lookup_field = "name"
 
     def retrieve(self, *args, **kwargs):
-        lookup_field = "name"
-        instance = self.get_object()
+        pk = self.kwargs.pop('pk', None)
+        if pk:
+            instance = get_object_or_404(Char, pk=pk)
+        else:
+            name = self.kwargs.pop('name', '')
+            instance = get_object_or_404(Char, name=name)
+
         char = CharSerializer(instance).data
         sources = [SourceSerializer(m).data for m in [i for i in instance.location.all()]]
 
@@ -69,8 +75,8 @@ class ResultsView(generic.ListView):
     slug_field = 'name'
 
     def get_queryset(self):
-        self.char = self.kwargs.pop('slug', '')
-        object_list = get_list_or_404(Char, name=self.char)
+        char = self.kwargs.pop('slug', '')
+        object_list = get_list_or_404(Char, name=char)
         return object_list
 
     def render_to_response(self, context):

@@ -28,11 +28,24 @@ export class CharDetailsComponent implements OnInit {
   	this.charService.getChar(id)
   		.subscribe(data => {
   			this.sources = [];
-  			data.sources.forEach(source => {
-  				this.sources.push(<Source>source);
-  			});
-  			this.char = data.char;
-  		});
+        this.char = data.char;
+        console.log("sources");
+        console.log(data.sources);
+        console.log("locations");
+        this.char.locations.forEach(location => {
+          location.source = this.search(location.source, data.sources);
+          console.log(location.source);
+  		  });
+        this.char = data.char;
+      }
+  }
+
+  search(id: number, myArray: Array) {
+    for (var i=0; i < myArray.length; i++) {
+      if (myArray[i].id === id) {
+        return myArray[i];
+      }
+    }
   }
 
   save(): void {}
