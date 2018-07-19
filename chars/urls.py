@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
@@ -10,7 +10,12 @@ urlpatterns = [
     path('search/<str:slug>', views.ResultsView.as_view(), name="results"),
     path('char/<int:pk>', views.DetailsView.as_view(), name="details"),
     path('char/<str:slug>', views.DetailsView.as_view(), name="details"),
-    path('api/chars', views.CharListAPIView.as_view(), name="char-list-api"),
+    path('api/char', views.CharListAPIView.as_view(), name="char-list-api"),
     path('api/char/<int:pk>', views.CharAPIView.as_view(), name="char-api"),
     path('api/char/<str:name>', views.CharAPIView.as_view(), name="char-list-slug-api"),
+    path('api/char/<int:pk>/location', views.LocationAPIView.as_view(), name="location-create-api"),
+    path('api/char/<int:pk>/location/<int:loc_pk>', views.LocationAPIView.as_view(), name="location-detail-api"),
+    path('api/source', views.SourceListAPIView.as_view(), name="source-list-api"),
+    # path('api/charinsource', views.CharInSourceCreateAPIView.as_view(), name="charinsource-create-api"),
+    # re_path(r'api/charinsource/(?P<pk>[0-9]+)', views.CharInSourceAPIView.as_view(), name="charinsource-api"),
 ]

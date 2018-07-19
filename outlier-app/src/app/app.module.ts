@@ -8,10 +8,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { OutlierNavComponent } from './outlier-nav/outlier-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatSelectModule, MatInputModule, MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatSortModule, MatExpansionModule } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { OutlierDashComponent } from './outlier-dash/outlier-dash.component';
 import { OutlierTableComponent } from './outlier-table/outlier-table.component';
 
 import { CharService } from './char.service';
+import { SourceService } from './source.service';
 
 import { RouterModule, Routes } from '@angular/router';
 import { CharSearchComponent } from './char-search/char-search.component';
@@ -27,11 +29,12 @@ const appRoutes: Routes = [
     OutlierNavComponent,
     OutlierDashComponent,
     OutlierTableComponent,
-    CharSearchComponent,
+    CharSearchComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     LayoutModule,
     MatSelectModule,
     MatInputModule,
@@ -51,7 +54,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
-  	CharService
+  	CharService,
+    SourceService
   ],
   bootstrap: [AppComponent]
 })

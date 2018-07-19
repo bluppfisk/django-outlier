@@ -50,10 +50,10 @@ class CharSerializer(serializers.ModelSerializer):
 class CharInSourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = CharInSource
-        fields = ('page', 'source',)
+        fields = ('id', 'page', 'source', 'char', )
 
 
 class SourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Source
-        fields = ('id', 'title', 'author', 'file', )
+        fields = ('id', 'title', 'author', 'file', 'offset', )

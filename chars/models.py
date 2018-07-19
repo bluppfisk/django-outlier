@@ -35,7 +35,7 @@ class CharInSource(models.Model):
     page = models.IntegerField()
 
     def __str__(self):
-        return str(self.page)
+        return str(self.char.name + " in " + self.source.title + " on page " + self.page)
 
 
 class AltChar(models.Model):

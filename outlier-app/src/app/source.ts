@@ -2,5 +2,6 @@ export class Source {
 	id: number;
 	title: string;
 	author: string;
-	// offset: number;
+	offset: number;
+	file: string;
 }

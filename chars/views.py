@@ -7,13 +7,13 @@ from rest_framework import generics
 from rest_framework.response import Response
 # from rest_framework.permissions import IsAdminUser
 
-from .serializers import CharSerializer, SourceSerializer
+from .serializers import CharSerializer, SourceSerializer, CharInSourceSerializer
 
 from .admin import BulkUpload
-from .models import Char
+from .models import Char, Source, CharInSource
 
 
-class CharListAPIView(generics.ListAPIView):
+class CharListAPIView(generics.ListCreateAPIView):
     queryset = Char.objects.all()
 
     def list(self, request):
@@ -32,10 +32,54 @@ class CharListAPIView(generics.ListAPIView):
             'sources': sources,
         })
 
+class LocationAPIView(generics.GenericAPIView):
+    serializer_class = CharInSourceSerializer
+    queryset = CharInSource.objects.all()
+
+    def get(self, *args, **kwargs):
+        char = Char.objects.get(pk=kwargs.pop('pk'))
+        cis = CharInSource.objects.filter(char=char)
+
+        return Response(CharInSourceSerializer(cis, many=True).data)
+
+    def delete(self, request, *args, **kwargs):
+        char = Char.objects.get(pk=kwargs.pop('pk'))
+        cis = CharInSource.objects.get(pk=kwargs.pop('loc_pk'))
+        cis.delete()
+
+        return Response(CharSerializer(char).data)
+
+    def post(self, request, *args, **kwargs):
+        char = Char.objects.get(pk=kwargs.pop('pk'))
+        source_id = request.data.get('source_id')
+        page = request.data.get('page')
+        source = Source.objects.get(pk=source_id)
+
+        cis = CharInSource(source=source, page=page, char=char)
+        cis.save()
+
+        return Response(CharInSourceSerializer(cis).data)
+
+
+class SourceListAPIView(generics.ListAPIView):
+    queryset = Source.objects.all()
+    serializer_class = SourceSerializer
+
+
+# class CharInSourceAPIView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = CharInSource.objects.all()
+#     serializer_class = CharInSourceSerializer
+
+
+# class CharInSourceCreateAPIView(generics.CreateAPIView):
+#     model = CharInSource
+#     serializer_class = CharInSourceSerializer
+
 
 class CharAPIView(generics.RetrieveAPIView):
     queryset = Char.objects.all()
     lookup_field = "name"
+    serializer_class = CharSerializer
 
     def retrieve(self, *args, **kwargs):
         pk = self.kwargs.pop('pk', None)
@@ -52,6 +96,18 @@ class CharAPIView(generics.RetrieveAPIView):
             'char': char,
             'sources': sources,
         })
+
+    def put(self, request):
+        data = request.data
+        char = Char.objects.get(pk=data.get('char_id'))
+        source = Source.objects.get(pk=data.get('source_id'))
+        page = data.get('page_no')
+
+        char_in_source = CharInSource(source=source, char=char, page=page)
+        # char_in_source.save()
+
+        response = CharSerializer(char).data
+        return Response(response)
 
 
 class IndexView(generic.ListView):

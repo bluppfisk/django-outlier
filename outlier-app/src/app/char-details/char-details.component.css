@@ -4,3 +4,21 @@
 	text-align: center;
 	background-color: lightgrey;
 }
+
+.altcharcard {
+	max-width: 200px;
+	margin: 4px;
+}
+
+.md-card-100 {
+	width: 100%;
+}
+
+.md-card-50 {
+	width: 46%;
+}
+
+.flexrow {
+	display: flex;
+	flex-flow: row wrap;
+}

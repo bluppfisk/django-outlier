@@ -21,16 +21,38 @@ export class CharService {
   }
 
   private charUrl = 'http://localhost:8000/api/char';
+  private charInSourceUrl = 'http://localhost:8000/api/charinsource'
 
   getChar(id: number): Observable<any> {
   	const url = `${this.charUrl}/${id}`;
   	return this.http.get<any>(url).pipe(
 		tap(char => {
 			this.log(`got char`);
-			console.log(char);
 		}),
 		catchError(this.handleError<any>('getChar id=${id}'))
   	);
+  }
+
+  addLocation(sourceId: number, pageNo: number, charId: number): Observable<Char> {
+    var body = {
+      'source_id': sourceId,
+      'page': pageNo,
+      'char_id': charId
+    }
+
+    return this.http.post<Char>(this.charUrl + '/' + charId + '/location', body, httpOptions).pipe(
+      tap(char => {
+        console.log(`updated char with new location`);
+      })
+    )
+  }
+
+  deleteLocation(locationId: number, charId: number): Observable<Char> {
+    return this.http.delete<Char>(this.charUrl + '/' + charId + '/location/' + locationId, httpOptions).pipe(
+      tap(char => {
+        console.log(`deleted location from char`);
+      })
+    );
   }
 
   searchChar(term: string): Observable<any> {
