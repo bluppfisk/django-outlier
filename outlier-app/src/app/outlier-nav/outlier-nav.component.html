@@ -1,27 +1,10 @@
 <mat-sidenav-container class="sidenav-container">
-<!--   <mat-sidenav
-    #drawer
-    class="sidenav"
-    fixedInViewport="true"
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="!(isHandset$ | async)">
-    <mat-toolbar color="primary"><app-char-search></app-char-search></mat-toolbar>
-    <mat-nav-list>
-      <a mat-list-item href="#">Link 1</a>
-      <a mat-list-item href="#">Link 2</a>
-      <a mat-list-item href="#">Link 3</a>
-    </mat-nav-list>
-  </mat-sidenav> -->
   <mat-sidenav-content>
     <mat-toolbar color="primary">
       <span>Outlier Tool</span>
       <span class="fill-remaining-space"></span>
       <app-char-search></app-char-search>
       <span class="fill-remaining-space"></span>
-      <!-- <mat-nav-list>
-        <a href="#"><mat-icon>add-to-queue</mat-icon></a>
-      </mat-nav-list> -->
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>

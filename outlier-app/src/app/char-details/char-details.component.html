@@ -1,51 +1,53 @@
 <div class="flexrow" *ngIf="char; else char_404">
-	<mat-card class="md-card-50">
-		<mat-accordion>
-		<mat-expansion-panel>
-			<mat-expansion-panel-header>
-				<mat-panel-title>{{ char.name }} Details</mat-panel-title>
-			</mat-expansion-panel-header>
-			id: {{ char.id }}
-			<h3 class="mat-h3">Locations</h3>
-			<mat-list *ngFor="let location of char.locations">
-				<mat-list-item>
-					in {{ location.source.title }} on page {{ location.page }}
-					<button mat-button color="warn" (click)="deleteLocation(location)">Delete</button>
-				</mat-list-item>
-			</mat-list>
-			<mat-list>
-				<mat-list-item>
-					in &nbsp;
-					<mat-form-field>
-						<mat-select placeholder="source" *ngIf="sources" [(value)]="sourceId">
-							<mat-option *ngFor="let source of sources" [value]="source.id">{{ source.title }}</mat-option>
-						</mat-select>
-					</mat-form-field>
-					&nbsp; on &nbsp;
-					<mat-form-field style="width: 60px">
-						<input matInput type="number" min="0" placeholder="page" #pageNo>
-					</mat-form-field>
-					<button mat-button color="primary" (click)="addLocation(sourceId, pageNo.value)">Add</button>
-				</mat-list-item>
-			</mat-list>
-		</mat-expansion-panel>
-		<mat-expansion-panel [expanded]="true">
-			<mat-expansion-panel-header>
-				<mat-panel-title>Historical forms</mat-panel-title>
-			</mat-expansion-panel-header>
-			<div class="flexrow">
-				<div *ngFor="let altchar of char.altchars">
-					<alt-char-form (locationEvent)="locationSelected($event)" [altChar]="altchar" [char]="char"></alt-char-form>
-				</div>
-				<div>
-					<alt-char-form (locationEvent)="locationSelected($event)" [char]="char"></alt-char-form>
-				</div>
-			</div>
-		</mat-expansion-panel>
-		</mat-accordion>
-	</mat-card>
-	<source-browser [location]="selectedLocation"></source-browser>
+  <mat-card class="md-card-50">
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ char.name }} Details</mat-panel-title>
+        </mat-expansion-panel-header>
+        id: {{ char.id }}
+        <h3 class="mat-h3">Locations</h3>
+        <mat-list *ngFor="let location of char.locations">
+          <mat-list-item>
+            in {{ location.source.title }} on page {{ location.page }}
+            <button mat-button color="warn" (click)="deleteLocation(location)">Delete</button>
+          </mat-list-item>
+        </mat-list>
+        <mat-list>
+          <mat-list-item>
+            in &nbsp;
+            <mat-form-field>
+              <mat-select placeholder="source" *ngIf="sources" [(value)]="sourceId">
+                <mat-option *ngFor="let source of sources" [value]="source.id">{{ source.title }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            &nbsp; on &nbsp;
+            <mat-form-field style="width: 60px">
+              <input matInput type="number" min="0" placeholder="page" #pageNo>
+            </mat-form-field>
+            <button mat-button color="primary" (click)="addLocation(sourceId, pageNo.value)">Add</button>
+          </mat-list-item>
+        </mat-list>
+      </mat-expansion-panel>
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Historical forms</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="flexrow">
+          <div *ngFor="let altchar of char.altchars">
+            <alt-char-form (locationEvent)="locationSelected($event)" [altChar]="altchar" [char]="char"></alt-char-form>
+          </div>
+          <div>
+            <alt-char-form (locationEvent)="locationSelected($event)" [char]="char"></alt-char-form>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card>
+  <mat-card class="md-card-50">
+    <source-browser [location]="selectedLocation"></source-browser>
+  </mat-card>
 </div>
 <ng-template #char_404>
-	<h2>Char not found</h2>
+  <h2>Char not found</h2>
 </ng-template>

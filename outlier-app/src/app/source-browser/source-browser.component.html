@@ -1,8 +1,6 @@
-	<mat-card class="md-card-50">
-		<mat-card-header>
-			<mat-card-title>Source browser</mat-card-title>
-		</mat-card-header>
-		<mat-card-content *ngIf="safeLocation">
-			<iframe [src]="safeLocation" style="width: 100%; height: 100%;"></iframe>
-		</mat-card-content>
-	</mat-card>
+<mat-card-header>
+  <mat-card-title>Source browser</mat-card-title>
+</mat-card-header>
+<mat-card-content *ngIf="safeLocation">
+  <iframe [src]="safeLocation" style="width: 100%; height: 100%;"></iframe>
+</mat-card-content>

@@ -4,6 +4,7 @@ import { SourceService } from '../source.service';
 import { AltChar } from '../altchar';
 import { Char } from '../char';
 import { Source } from '../source';
+import { Location } from '../location';
 
 @Component({
   selector: 'alt-char-form',
@@ -21,7 +22,7 @@ export class AltCharFormComponent implements OnInit {
 
   constructor(
   	private charService: CharService,
-	private sourceService: SourceService
+	  private sourceService: SourceService
   ) { }
 
   ngOnInit() {
@@ -92,7 +93,10 @@ export class AltCharFormComponent implements OnInit {
       }
   }
 
-  locationChanged(location: Location) {
+  locationChanged(sourceId: number) {
+    var source: Source = this.char.locations.find(l => l.source.id == sourceId).source;
+    var page: number = this.altChar.page || 0;
+    var location = { page, source } as Location;
   	this.locationEvent.emit(location);
   }
 }

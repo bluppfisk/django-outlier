@@ -11,7 +11,6 @@ import { OutlierNavComponent } from './outlier-nav/outlier-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatFormFieldModule, MatSelectModule, MatInputModule, MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatSortModule, MatExpansionModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { OutlierDashComponent } from './outlier-dash/outlier-dash.component';
 
 import { CharService } from './char.service';
 import { SourceService } from './source.service';
@@ -30,7 +29,6 @@ const appRoutes: Routes = [
     AppComponent,
     CharDetailsComponent,
     OutlierNavComponent,
-    OutlierDashComponent,
     CharSearchComponent,
     AltCharFormComponent,
     SourceBrowserComponent,

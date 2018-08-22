@@ -23,9 +23,7 @@ export class SourceBrowserComponent implements OnInit {
 
 
   ngOnInit() {
-  	// if (!this.selectedLocation) {
-  	// 	this.selectedLocation = Object.assign(new Location(), Location.EMPTY_MODEL);
-  	// }
+  
   }
 
 }
