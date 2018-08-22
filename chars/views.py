@@ -37,6 +37,7 @@ class AltCharAPIView(generics.GenericAPIView):
     serializer_class = AltCharSerializer
     queryset = AltChar.objects.all()
 
+    # TODO: implement put function
     def put(self, request, *args, **kwargs):
         data = request.data
         data.update({
@@ -51,7 +52,6 @@ class AltCharAPIView(generics.GenericAPIView):
         #     print(serializer.validated_data)
         #     ac = serializer.save()
 
-
         # return Response(AltCharSerializer(ac).data)
         # char = Char.objects.get(pk=kwargs.pop('pk'))
         # ac = AltChar.objects.get(pk=kwargs.pop('ac_pk'))
@@ -60,7 +60,6 @@ class AltCharAPIView(generics.GenericAPIView):
         # ac.sequence_no = data.get('sequence_no')
 
         # ac.save()
-
 
     def post(self, request, *args, **kwargs):
         char = Char.objects.get(pk=kwargs.pop('pk'))
