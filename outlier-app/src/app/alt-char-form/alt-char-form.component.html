@@ -14,8 +14,8 @@
     <button mat-button color="warn" (click)="deleteAltChar()">Delete</button>
   </mat-card-actions>
 </mat-card>
-<mat-card class="altCharcard" *ngIf="editing">
-  <form (ngSubmit)="addAltChar()" #newaltChar="ngForm">
+<form (ngSubmit)="addAltChar()" #newaltChar="ngForm">
+  <mat-card class="altCharcard" *ngIf="editing">
     <mat-card-header>
       <div mat-card-avatar style="display: inline-block;" (paste)="pasteImage($event)">
         <img mat-card-avatar src="{{ altChar.image }}" class="glue64_preview" style="pointer-events: none">
@@ -52,5 +52,5 @@
       <button *ngIf="altChar.id != null" mat-button type="submit" color="primary">Save</button>
       <button *ngIf="altChar.id != null" mat-button type="button" (click)="cancelEdit()" color="warn">Cancel</button>
     </mat-card-actions>
-  </form>
-</mat-card>
+  </mat-card>
+</form>
