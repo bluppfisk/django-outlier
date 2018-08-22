@@ -1,6 +1,5 @@
 <div class="flexrow" *ngIf="char; else char_404">
 	<mat-card class="md-card-50">
-		<!-- <div class="md-card-50"> -->
 		<mat-accordion>
 		<mat-expansion-panel>
 			<mat-expansion-panel-header>
@@ -36,23 +35,16 @@
 			</mat-expansion-panel-header>
 			<div class="flexrow">
 				<div *ngFor="let altchar of char.altchars">
-					<alt-char-form [altChar]="altchar" [char]="char"></alt-char-form>
+					<alt-char-form (locationEvent)="locationSelected($event)" [altChar]="altchar" [char]="char"></alt-char-form>
 				</div>
 				<div>
-					<alt-char-form [char]="char"></alt-char-form>
+					<alt-char-form (locationEvent)="locationSelected($event)" [char]="char"></alt-char-form>
 				</div>
 			</div>
 		</mat-expansion-panel>
 		</mat-accordion>
 	</mat-card>
-	<mat-card class="md-card-50">
-		<mat-card-header>
-			<mat-card-title>Source browser</mat-card-title>
-		</mat-card-header>
-		<mat-card-content *ngIf="selectedLocation">
-			<iframe [src]="selectedLocation" style="width: 100%; height: 100%;"></iframe>
-		</mat-card-content>
-	</mat-card>
+	<source-browser [location]="selectedLocation"></source-browser>
 </div>
 <ng-template #char_404>
 	<h2>Char not found</h2>

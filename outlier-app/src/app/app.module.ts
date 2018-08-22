@@ -7,11 +7,11 @@ import { AppComponent } from './app.component';
 import { CharDetailsComponent } from './char-details/char-details.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { OutlierNavComponent } from './outlier-nav/outlier-nav.component';
+
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatFormFieldModule, MatSelectModule, MatInputModule, MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatSortModule, MatExpansionModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { OutlierDashComponent } from './outlier-dash/outlier-dash.component';
-import { OutlierTableComponent } from './outlier-table/outlier-table.component';
 
 import { CharService } from './char.service';
 import { SourceService } from './source.service';
@@ -19,6 +19,7 @@ import { SourceService } from './source.service';
 import { RouterModule, Routes } from '@angular/router';
 import { CharSearchComponent } from './char-search/char-search.component';
 import { AltCharFormComponent } from './alt-char-form/alt-char-form.component';
+import { SourceBrowserComponent } from './source-browser/source-browser.component';
 
 const appRoutes: Routes = [
 	{ path: 'char/:id', component: CharDetailsComponent }
@@ -30,9 +31,9 @@ const appRoutes: Routes = [
     CharDetailsComponent,
     OutlierNavComponent,
     OutlierDashComponent,
-    OutlierTableComponent,
     CharSearchComponent,
     AltCharFormComponent,
+    SourceBrowserComponent,
   ],
   imports: [
     BrowserModule,

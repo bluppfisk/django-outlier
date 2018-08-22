@@ -17,6 +17,7 @@ import { AltCharFormComponent } from '../alt-char-form/alt-char-form.component'
 export class CharDetailsComponent implements OnInit {
 	@Input() char: Char;
 	sources: Source[];
+  selectedLocation: Location;
 
   constructor(
   	private route: ActivatedRoute,
@@ -62,6 +63,10 @@ export class CharDetailsComponent implements OnInit {
     this.sourceService.listSources().subscribe(sources => {
       this.sources = sources;
     });
+  }
+
+  locationSelected(location: Location): void {
+    this.selectedLocation = location;
   }
 
   ngOnInit() {

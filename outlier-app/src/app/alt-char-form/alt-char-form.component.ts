@@ -1,9 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { CharService } from '../char.service';
 import { SourceService } from '../source.service';
 import { AltChar } from '../altchar';
 import { Char } from '../char';
+import { Source } from '../source';
 
 @Component({
   selector: 'alt-char-form',
@@ -14,13 +14,13 @@ import { Char } from '../char';
 export class AltCharFormComponent implements OnInit {
 	@Input() altChar: AltChar;
 	@Input() char: Char;
-	selectedLocation: SafeResourceUrl;
+	@Output() locationEvent = new EventEmitter<Location>();
+
 	editing: boolean = false;
 	oldAltChar: AltChar;
 
   constructor(
   	private charService: CharService,
-	private sanitizer: DomSanitizer,
 	private sourceService: SourceService
   ) { }
 
@@ -66,12 +66,6 @@ export class AltCharFormComponent implements OnInit {
       });
   }
 
-  public locationSelected(event): void {
-    this.selectedLocation = this.sanitizer.bypassSecurityTrustResourceUrl(
-      event.value.source.file + "#page=" + event.value.page
-    );
-  }
-
   public pasteImage(event: ClipboardEvent) {
       const element     = event.srcElement.parentElement.parentElement,
             preview     = element.querySelector('.glue64_preview')
@@ -96,5 +90,9 @@ export class AltCharFormComponent implements OnInit {
       } else {
         alert("not an image");
       }
-  };
+  }
+
+  locationChanged(location: Location) {
+  	this.locationEvent.emit(location);
+  }
 }

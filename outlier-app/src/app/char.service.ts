@@ -64,10 +64,8 @@ export class CharService {
 
   addAltChar(altChar: AltChar, char: Char): Observable<AltChar> {
     var payload = altChar.serialise();
-    // console.log(payload);
     return this.http.post<AltChar>(this.charUrl + '/' + char.id + '/altchar', payload, httpOptions).pipe(
       tap(char => {
-        // console.log(char);
         console.log(`new altchar added/updated`);
       })
     );
