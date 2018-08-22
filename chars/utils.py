@@ -16,8 +16,10 @@ class StorageHandler():
     @classmethod
     def rename_object(cls, old_path, new_path):
         s3 = cls.get_s3_resource()
+        print("copying", old_path, "to", new_path)
         s3.Object(settings.AWS_STORAGE_BUCKET_NAME, new_path).copy_from(
             CopySource=settings.AWS_STORAGE_BUCKET_NAME + "/" + old_path)
+        print("deleting", old_path)
         s3.Object(settings.AWS_STORAGE_BUCKET_NAME, old_path).delete()
 
     @classmethod

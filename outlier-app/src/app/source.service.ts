@@ -16,6 +16,7 @@ const httpOptions = {
 })
 
 export class SourceService {
+  sources: Source[] = [];
 
   constructor(private http: HttpClient) { }
 
@@ -24,10 +25,18 @@ export class SourceService {
   listSources(): Observable<Source[]> {
   	return this.http.get<Source[]>(this.sourcesUrl).pipe(
 		tap(sources => {
-			console.log(`got sources`);
+      console.log(`got sources`);
+      sources.forEach((source, index, sources) => {
+        source = new Source().deserialise(source);
+        this.sources.push(source);
+      });
 		}),
 		catchError(this.handleError<Source[]>('Sources'))
   	);
+  }
+
+  findSourceById(id: number): Source {
+    return this.sources.find(s => s.id === id)
   }
 
   private handleError<T> (operation = 'operation', result?: T) {

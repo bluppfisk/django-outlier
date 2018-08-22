@@ -1,12 +1,3 @@
-<!-- <div class="flexrow" *ngIf="char; else char_404">
-	<mat-card class="md-card-100">
-		<mat-card-header>
-			<div mat-card-avatar class="char-avatar">{{ char.name }}</div>
-			<mat-card-title>Details</mat-card-title>
-			<mat-card-subtitle>id: <strong>{{ char.id }}</strong></mat-card-subtitle>
-		</mat-card-header>
-	</mat-card>
-</div> -->
 <div class="flexrow" *ngIf="char; else char_404">
 	<mat-card class="md-card-50">
 		<!-- <div class="md-card-50"> -->
@@ -20,7 +11,7 @@
 			<mat-list *ngFor="let location of char.locations">
 				<mat-list-item>
 					in {{ location.source.title }} on page {{ location.page }}
-					<button mat-button color="warn" (click)="deleteLocation(location.id)">Delete</button>
+					<button mat-button color="warn" (click)="deleteLocation(location)">Delete</button>
 				</mat-list-item>
 			</mat-list>
 			<mat-list>
@@ -44,54 +35,22 @@
 				<mat-panel-title>Historical forms</mat-panel-title>
 			</mat-expansion-panel-header>
 			<div class="flexrow">
-				<mat-card *ngFor="let altchar of char.altchars" class="altcharcard">
-					<mat-card-header>
-						<img mat-card-avatar src="{{ altchar.image }}">
-						<mat-card-title>{{ altchar.name }}</mat-card-title>
-						<mat-card-subtitle>{{ altchar.sequence_no }}</mat-card-subtitle>
-					</mat-card-header>
-					<mat-card-content>
-						<p>In {{ altchar.location.title }} on p. {{ altchar.page }}</p>
-						<p>{{ altchar.source_obj }}</p>
-					</mat-card-content>
-					<mat-divider></mat-divider>
-					<mat-card-actions>
-						<button mat-button color="primary" (click)="save()">Save</button>
-						<button mat-button color="warn" (click)="deleteLocation(location.id)">Delete</button>
-					</mat-card-actions>
-				</mat-card>
-				<mat-card class="altcharcard">
-					<mat-form-field>
-					  <mat-select placeholder="Select source" [(value)]="selectedLocation">
-					    <mat-option *ngFor="let location of char.locations" [value]="location">
-					      {{ location.source.title }}
-					    </mat-option>
-					  </mat-select>
-					</mat-form-field>
-					<mat-divider></mat-divider>
-					<mat-card-actions>
-						<button mat-button color="primary" (click)="save()">Save</button>
-						<button mat-button color="warn">Delete</button>
-					</mat-card-actions>
-				</mat-card>
+				<div *ngFor="let altchar of char.altchars">
+					<alt-char-form [altChar]="altchar" [char]="char"></alt-char-form>
+				</div>
+				<div>
+					<alt-char-form [char]="char"></alt-char-form>
+				</div>
 			</div>
 		</mat-expansion-panel>
 		</mat-accordion>
-<!-- 		<mat-expansion-panel>
-			<mat-expansion-panel-header>
-				<mat-panel-title *ngIf="char.locations">Locations</mat-panel-title>
-			</mat-expansion-panel-header>
-		</mat-expansion-panel> -->
-	<!-- </div> -->
 	</mat-card>
 	<mat-card class="md-card-50">
 		<mat-card-header>
 			<mat-card-title>Source browser</mat-card-title>
 		</mat-card-header>
 		<mat-card-content *ngIf="selectedLocation">
-			<iframe src="{{ selectedLocation.source.file }}"></iframe>
-			page {{ selectedLocation.page }} in {{ selectedLocation.source.title }}
-			<a href="{{ selectedLocation.source.file }}">{{ selectedLocation.source.file }}</a>
+			<iframe [src]="selectedLocation" style="width: 100%; height: 100%;"></iframe>
 		</mat-card-content>
 	</mat-card>
 </div>

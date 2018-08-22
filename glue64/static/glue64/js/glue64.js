@@ -5,6 +5,7 @@
 
         for (var i = 0 ; i < event.clipboardData.items.length ; i++) {
             var item = event.clipboardData.items[i];
+            console.log(item);
             if (item.type.indexOf("image") != -1) {
               var blob = item.getAsFile();
             } else {

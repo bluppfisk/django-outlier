@@ -1,21 +1,5 @@
 from rest_framework import serializers
 from .models import Char, Source, AltChar, CharInSource
-from django.conf import settings
-
-# class SingleCharSerializer(serializers.ModelSerializer):
-#     forms = serializers.SerializerMethodField()
-#     locations = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = Char
-#         fields = ('id', 'name', 'locations', 'forms',)
-
-#     def get_forms(self, obj):
-#         qset = AltChar.objects.filter(canonical=obj)
-#         return [AltCharSerializer(m).data for m in qset]
-
-#     def get_locations(self, obj):
-#         return CharSerializer().get_locations(obj)
 
 
 class AltCharSerializer(serializers.ModelSerializer):
@@ -23,7 +7,20 @@ class AltCharSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AltChar
-        fields = ('id', 'name', 'image', 'location', 'page', 'sequence_no', 'source_obj',)
+        fields = ('id', 'name', 'image', 'source', 'page', 'sequence_no', 'source_obj',)
+        depth = 1
+
+    def get_image(self, obj):
+        return obj.get_full_image_path()
+
+
+class AltCharMiniSerializer(AltCharSerializer):
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AltChar
+        fields = ('id', 'name', 'image', 'source', 'page', 'sequence_no', 'source_obj',)
+        depth = 0
 
     def get_image(self, obj):
         return obj.get_full_image_path()
@@ -44,13 +41,13 @@ class CharSerializer(serializers.ModelSerializer):
 
     def get_altchars(self, obj):
         qset = AltChar.objects.filter(canonical=obj)
-        return [AltCharSerializer(m).data for m in qset]
+        return [AltCharMiniSerializer(m).data for m in qset]
 
 
 class CharInSourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = CharInSource
-        fields = ('id', 'page', 'source', 'char', )
+        fields = ('page', 'source', )
 
 
 class SourceSerializer(serializers.ModelSerializer):

@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { CharDetailsComponent } from './char-details/char-details.component';
@@ -17,6 +18,7 @@ import { SourceService } from './source.service';
 
 import { RouterModule, Routes } from '@angular/router';
 import { CharSearchComponent } from './char-search/char-search.component';
+import { AltCharFormComponent } from './alt-char-form/alt-char-form.component';
 
 const appRoutes: Routes = [
 	{ path: 'char/:id', component: CharDetailsComponent }
@@ -29,7 +31,8 @@ const appRoutes: Routes = [
     OutlierNavComponent,
     OutlierDashComponent,
     OutlierTableComponent,
-    CharSearchComponent
+    CharSearchComponent,
+    AltCharFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,7 +54,8 @@ const appRoutes: Routes = [
     MatSortModule,
     MatExpansionModule,
     HttpClientModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    FormsModule,
   ],
   providers: [
   	CharService,

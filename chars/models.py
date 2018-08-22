@@ -15,7 +15,7 @@ class Source(models.Model):
         return self.title + " by " + self.author
 
     class Meta:
-        ordering = ('title',)
+        ordering = ['title']
 
 
 class Char(models.Model):
@@ -26,7 +26,7 @@ class Char(models.Model):
         return self.name
 
     class Meta:
-        ordering = ('name',)
+        ordering = ['name']
 
 
 class CharInSource(models.Model):
@@ -35,7 +35,14 @@ class CharInSource(models.Model):
     page = models.IntegerField()
 
     def __str__(self):
-        return str(self.char.name + " in " + self.source.title + " on page " + self.page)
+        return "{} in {} on page {}".format(
+            self.char.name,
+            self.source.title,
+            self.page
+        )
+
+    class Meta:
+        ordering = ['pk']
 
 
 class AltChar(models.Model):
@@ -43,53 +50,55 @@ class AltChar(models.Model):
     canonical = models.ForeignKey(Char, on_delete=models.DO_NOTHING)
     sequence_no = models.IntegerField(default=0)
     source_obj = models.CharField(max_length=255, default="")
-    location = models.ForeignKey(Source, default=1, on_delete=models.DO_NOTHING)
+    source = models.ForeignKey(Source, default=1, on_delete=models.DO_NOTHING)
     page = models.IntegerField(default=0)
     image = Glue64Field(dest=settings.ALTCHAR_PATH)
-
-    __original_image = None
 
     def __str__(self):
         return self.canonical.name + " (hist)"
 
-    def __init__(self, *args, **kwargs):
-        super(AltChar, self).__init__(*args, **kwargs)
-        self.__original_image = self.image
-
     def save(self, *args, **kwargs):
-        filename = "{}-evolution-{}-{}-{}-{}.png".format(
-            self.canonical.name,
-            self.sequence_no,
-            self.location.title,
-            self.page,
-            self.source_obj
-        )
+        filename = self.get_filename()
 
         if "data:image/png;base64" in self.image:
             # freshly pasted: upload
             StorageHandler.base64_to_s3(self.image, settings.ALTCHAR_PATH, filename)
+        else:
+            # compare newly computed filename with one in database
+            # and rename file on S3 instead
+            original_image = AltChar.objects.get(pk=self.id).image
+            if original_image != filename:
+                StorageHandler.rename_object(
+                    settings.ALTCHAR_PATH + original_image,
+                    settings.ALTCHAR_PATH + filename
+                )
 
         self.image = filename
 
-        if self.__original_image != self.image and self.__original_image != "":
-            # rename file on S3 if data changed
-            original_filename = self.__original_image.split("/")[-1:][0]
-            StorageHandler.rename_object(original_filename, filename)
-
         super(AltChar, self).save(*args, **kwargs)
-        self.__original_image = self.image
 
     def delete(self, *args, **kwargs):
         StorageHandler.delete_object(settings.ALTCHAR_PATH + self.image)
         super(AltChar, self).delete(*args, **kwargs)
 
-    def get_full_image_path(self):
+    def get_full_image_path(self, image=None):
+        image = image or self.image
         return "{}{}/{}{}".format(
             settings.AWS_ACCESS_URL,
             settings.AWS_STORAGE_BUCKET_NAME,
             settings.ALTCHAR_PATH,
-            self.image
+            image
+        )
+
+    def get_filename(self):
+        return "{}-evolution-{}-{}-{}-{}.png".format(
+            self.canonical.name,
+            self.sequence_no,
+            self.source.title,
+            self.page,
+            self.source_obj
         )
 
     class Meta:
-        ordering = ('name',)
+        ordering = ['id']
+        unique_together = ('canonical', 'sequence_no', 'page', 'source', 'name', )

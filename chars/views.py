@@ -7,10 +7,10 @@ from rest_framework import generics
 from rest_framework.response import Response
 # from rest_framework.permissions import IsAdminUser
 
-from .serializers import CharSerializer, SourceSerializer, CharInSourceSerializer
+from .serializers import AltCharSerializer, CharSerializer, SourceSerializer, CharInSourceSerializer
 
 from .admin import BulkUpload
-from .models import Char, Source, CharInSource
+from .models import AltChar, Char, Source, CharInSource
 
 
 class CharListAPIView(generics.ListCreateAPIView):
@@ -32,6 +32,58 @@ class CharListAPIView(generics.ListCreateAPIView):
             'sources': sources,
         })
 
+
+class AltCharAPIView(generics.GenericAPIView):
+    serializer_class = AltCharSerializer
+    queryset = AltChar.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        data.update({
+            "source": Source.objects.get(pk=data.get('source')),
+            "canonical": Char.objects.get(pk=kwargs.pop('pk'))
+        })
+        print(data)
+        # char = Char.objects.get(pk=kwargs.pop('pk'))
+        # ac = AltChar.objects.create(**data)
+        # serializer = AltCharSerializer(data=data)
+        # if serializer.is_valid():
+        #     print(serializer.validated_data)
+        #     ac = serializer.save()
+
+
+        # return Response(AltCharSerializer(ac).data)
+        # char = Char.objects.get(pk=kwargs.pop('pk'))
+        # ac = AltChar.objects.get(pk=kwargs.pop('ac_pk'))
+        # ac.update(**data)
+        # ac.source = Source.objects.get(pk=data.get('source'))
+        # ac.sequence_no = data.get('sequence_no')
+
+        # ac.save()
+
+
+    def post(self, request, *args, **kwargs):
+        char = Char.objects.get(pk=kwargs.pop('pk'))
+        data = request.data
+        source = Source.objects.get(pk=data.get('source'))
+        data.update({
+            'canonical': char,
+            'source': source
+        })
+        ac = AltChar(**data)
+        ac.save()
+
+        return Response(AltCharSerializer(ac).data)
+
+    def delete(self, request, *args, **kwargs):
+        char = Char.objects.get(pk=kwargs.pop('pk'))
+        altchar = AltChar.objects.get(pk=kwargs.pop('ac_pk'))
+
+        altchar.delete()
+
+        return Response(AltCharSerializer([m for m in AltChar.objects.filter(canonical=char)], many=True).data)
+
+
 class LocationAPIView(generics.GenericAPIView):
     serializer_class = CharInSourceSerializer
     queryset = CharInSource.objects.all()
@@ -51,9 +103,9 @@ class LocationAPIView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         char = Char.objects.get(pk=kwargs.pop('pk'))
-        source_id = request.data.get('source_id')
+        source = Source.objects.get(pk=request.data.get('source').get('id'))
         page = request.data.get('page')
-        source = Source.objects.get(pk=source_id)
+        # source = Source.objects.get(pk=source_id)
 
         cis = CharInSource(source=source, page=page, char=char)
         cis.save()
@@ -64,16 +116,6 @@ class LocationAPIView(generics.GenericAPIView):
 class SourceListAPIView(generics.ListAPIView):
     queryset = Source.objects.all()
     serializer_class = SourceSerializer
-
-
-# class CharInSourceAPIView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = CharInSource.objects.all()
-#     serializer_class = CharInSourceSerializer
-
-
-# class CharInSourceCreateAPIView(generics.CreateAPIView):
-#     model = CharInSource
-#     serializer_class = CharInSourceSerializer
 
 
 class CharAPIView(generics.RetrieveAPIView):
@@ -90,7 +132,7 @@ class CharAPIView(generics.RetrieveAPIView):
             instance = get_object_or_404(Char, name=name)
 
         char = CharSerializer(instance).data
-        sources = [SourceSerializer(m).data for m in [i for i in instance.location.all()]]
+        sources = [SourceSerializer(m).data for m in {i for i in instance.location.all()}]
 
         return Response({
             'char': char,

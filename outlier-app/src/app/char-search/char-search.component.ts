@@ -23,7 +23,7 @@ export class CharSearchComponent implements OnInit {
     this.charService.searchChar(term)
       .subscribe(data => {
         if (data) {
-          var id:string = data.char.id;
+          var id: string = data.char.id;
           this.router.navigate(["char/" + id]);
         } else {
           this.router.navigate(["char/0"]);

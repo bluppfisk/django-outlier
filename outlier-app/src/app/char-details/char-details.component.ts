@@ -4,6 +4,9 @@ import { CharService } from '../char.service';
 import { SourceService } from '../source.service';
 import { Char } from '../char';
 import { Source } from '../source';
+import { AltChar } from '../altchar';
+import { Location } from '../location';
+import { AltCharFormComponent } from '../alt-char-form/alt-char-form.component'
 
 @Component({
   selector: 'app-char-details',
@@ -18,7 +21,7 @@ export class CharDetailsComponent implements OnInit {
   constructor(
   	private route: ActivatedRoute,
   	private charService: CharService,
-    private sourceService: SourceService
+    private sourceService: SourceService,
   ) { }
 
   addLocation(sourceId: number, pageNo: number): void {
@@ -26,28 +29,19 @@ export class CharDetailsComponent implements OnInit {
       return;
     }
 
-    var newLocation = {
-      source: this.findById(this.sources, sourceId),
-      page: pageNo,
-      id: null
-    }
+    var newLocation: Location = Object.assign(new Location(), {"id": null, "page": pageNo, "source": this.sources.find(s => s.id == sourceId)});
 
-    this.charService.addLocation(sourceId, pageNo, this.char.id)
+    this.charService.addLocation(newLocation, this.char)
       .subscribe(data => {
         newLocation.id = data.id;
         this.char.locations.push(newLocation);
       });
   }
 
-  deleteLocation(locationId: number): void {
-    this.charService.deleteLocation(locationId, this.char.id)
+  deleteLocation(location: Location): void {
+    this.charService.deleteLocation(location, this.char)
       .subscribe(data => {
-        console.log(data);
-
-        this.popFromArray(this.char.locations, locationId);
-        // var obj = this.char.locations.filter(function(el) { return el.id === locationId });
-        // var index = this.char.locations.indexOf(obj[0]);
-        // this.char.locations.splice(index, 1);
+        this.char.locations.filter(l => l.id != location.id);
       });
   }
 
@@ -57,35 +51,11 @@ export class CharDetailsComponent implements OnInit {
   		return;
   	}
 
-    this.getSources();
-
   	this.charService.getChar(id)
-  		.subscribe(data => {
-        console.log(data);
-        data.char.locations.forEach(location => {
-          location.source = this.findById(data.sources, location.source);
-  		  });
-        data.char.altchars.forEach(altchar => {
-          altchar.location = this.findById(data.sources, altchar.location);
-        });
-        this.char = data.char;
+  		.subscribe(char => {
+        this.char = char.char;
       }
     );
-  }
-
-  findSourceById(id): Source {
-    var source;
-
-    for (var i=0; i<this.sources.length; i++) {
-      if (this.sources[i].id === id) {
-        return this.sources[i];
-      }
-    }
-  }
-
-  private popFromArray(array, id: number): void {
-    var index = array.indexOf(this.findById(array, id));
-    array.splice(index, 1);
   }
 
   private getSources(): void {
@@ -94,20 +64,10 @@ export class CharDetailsComponent implements OnInit {
     });
   }
 
-  private findById(array, id) {
-    for (var i=0; i < array.length; i++) {
-      if (array[i].id === id) {
-        return array[i];
-      }
-    }
-  }
-
-  save(): void {}
-
   ngOnInit() {
 	this.route.params.subscribe(params => {
 		this.getChar(params['id']);
+    this.getSources();
      });
   }
-
 }
