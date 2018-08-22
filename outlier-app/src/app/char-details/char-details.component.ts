@@ -41,7 +41,7 @@ export class CharDetailsComponent implements OnInit {
   deleteLocation(location: Location): void {
     this.charService.deleteLocation(location, this.char)
       .subscribe(data => {
-        this.char.locations.filter(l => l.id != location.id);
+        this.char.locations = this.char.locations.filter(l => l != location);
       });
   }
 

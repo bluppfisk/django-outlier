@@ -44,11 +44,9 @@ export class AltCharFormComponent implements OnInit {
   public addAltChar() {
   	this.editing = false;
   	if (this.altChar.id !== null) {
-  		console.log(this.altChar.image);
   		this.charService.addAltChar(this.altChar, this.char)
   		.subscribe(data => {
   			this.altChar = Object.assign(new AltChar().deserialise(data));
-  			console.log(this.altChar);
   		});
   	} else {
 		this.charService.addAltChar(this.altChar, this.char)
@@ -61,11 +59,11 @@ export class AltCharFormComponent implements OnInit {
   	}
    }
 
-  public deleteAltChar(altCharId: number) {
+  public deleteAltChar() {
     this.charService.deleteAltChar(this.altChar, this.char)
       .subscribe(data => {
-      	this.char.altchars.filter(ac => ac != this.altChar);
-      })
+      	this.char.altchars = this.char.altchars.filter(ac => ac != this.altChar);
+      });
   }
 
   public locationSelected(event): void {

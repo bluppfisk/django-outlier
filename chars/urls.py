@@ -18,6 +18,4 @@ urlpatterns = [
     path('api/char/<int:pk>/altchar', views.AltCharAPIView.as_view(), name="altchar-create-api"),
     path('api/char/<int:pk>/altchar/<int:ac_pk>', views.AltCharAPIView.as_view(), name="altchar-detail-api"),
     path('api/source', views.SourceListAPIView.as_view(), name="source-list-api"),
-    # path('api/charinsource', views.CharInSourceCreateAPIView.as_view(), name="charinsource-create-api"),
-    # re_path(r'api/charinsource/(?P<pk>[0-9]+)', views.CharInSourceAPIView.as_view(), name="charinsource-api"),
 ]

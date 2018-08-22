@@ -47,7 +47,7 @@ class CharSerializer(serializers.ModelSerializer):
 class CharInSourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = CharInSource
-        fields = ('page', 'source', )
+        fields = ('id', 'page', 'source', )
 
 
 class SourceSerializer(serializers.ModelSerializer):

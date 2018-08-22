@@ -105,7 +105,6 @@ class LocationAPIView(generics.GenericAPIView):
         char = Char.objects.get(pk=kwargs.pop('pk'))
         source = Source.objects.get(pk=request.data.get('source').get('id'))
         page = request.data.get('page')
-        # source = Source.objects.get(pk=source_id)
 
         cis = CharInSource(source=source, page=page, char=char)
         cis.save()

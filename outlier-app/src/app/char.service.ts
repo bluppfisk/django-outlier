@@ -54,6 +54,7 @@ export class CharService {
   }
 
   deleteLocation(location: Location, char: Char): Observable<Char> {
+    console.log(location);
     return this.http.delete<Char>(this.charUrl + '/' + char.id + '/location/' + location.id, httpOptions).pipe(
       tap(char => {
         console.log(`deleted location from char`);
