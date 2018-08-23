@@ -5,12 +5,26 @@ from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.parsers import FileUploadParser
 # from rest_framework.permissions import IsAdminUser
 
 from .serializers import AltCharSerializer, CharSerializer, SourceSerializer, CharInSourceSerializer
 
 from .admin import BulkUpload
 from .models import AltChar, Char, Source, CharInSource
+from .utils import CSVFileReader, LocationSourceMapper
+
+
+class MapperAPIView(generic.CreateAPIView):
+    parser_classes = (FileUploadParser, )
+
+    def put(self, request, *args, **kwargs):
+        file = request.data['file']
+        source = Source.objects.get(pk=kwargs.pop('pk'))
+        locations = CSVFileReader.read(file)
+        map = LocationSourceMapper.map(locations=locations, source=source)
+
+        return Response(CharInSourceSerializer(map).data, many=True)
 
 
 class CharListAPIView(generics.ListCreateAPIView):
