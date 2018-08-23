@@ -15,16 +15,16 @@ from .models import AltChar, Char, Source, CharInSource
 from .utils import CSVFileReader, LocationSourceMapper
 
 
-class MapperAPIView(generic.CreateAPIView):
+class MapperAPIView(generics.GenericAPIView):
     parser_classes = (FileUploadParser, )
 
     def put(self, request, *args, **kwargs):
-        file = request.data['file']
+        file = request.FILES['file']
         source = Source.objects.get(pk=kwargs.pop('pk'))
         locations = CSVFileReader.read(file)
         map = LocationSourceMapper.map(locations=locations, source=source)
 
-        return Response(CharInSourceSerializer(map).data, many=True)
+        return Response({"numberAdded": len(map)})
 
 
 class CharListAPIView(generics.ListCreateAPIView):
