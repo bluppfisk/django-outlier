@@ -19,9 +19,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { CharSearchComponent } from './char-search/char-search.component';
 import { AltCharFormComponent } from './alt-char-form/alt-char-form.component';
 import { SourceBrowserComponent } from './source-browser/source-browser.component';
+import { CSVUploadFormComponent } from './csvupload-form/csvupload-form.component';
 
 const appRoutes: Routes = [
-	{ path: 'char/:id', component: CharDetailsComponent }
+	{ path: 'char/:id', component: CharDetailsComponent },
+  { path: 'location/uploadMap', component: CSVUploadFormComponent },
 ];
 
 @NgModule({
@@ -32,6 +34,7 @@ const appRoutes: Routes = [
     CharSearchComponent,
     AltCharFormComponent,
     SourceBrowserComponent,
+    CSVUploadFormComponent,
   ],
   imports: [
     BrowserModule,

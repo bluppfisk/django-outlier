@@ -1,0 +1,12 @@
+<h2>Upload Locations Map</h2>
+<button onclick="document.getElementById('csv').click()">Choose CSV file</button>
+<input (change)="handleFileInput($event.target.files)" id="csv" type="file" style="display: none">
+<mat-form-field>
+  <mat-select matInput placeholder="Select source" [(ngModel)]="source" name="sourceSelect">
+    <mat-option *ngFor="let source of sources" [value]="source">{{ source.title }}</mat-option>
+  </mat-select>
+</mat-form-field>
+<button (click)="uploadCSV()" [disabled]="!source || csvFile === null || csvFile.type !== 'text/csv'">Upload</button>
+<div *ngIf="error">
+	{{ error }}!
+</div>

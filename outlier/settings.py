@@ -64,6 +64,11 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:4200',
 )
 
+CORS_ALLOW_HEADERS = (
+    'content-type',
+    'content-disposition'
+)
+
 ROOT_URLCONF = 'outlier.urls'
 
 TEMPLATES = [

@@ -20,10 +20,10 @@ export class SourceService {
 
   constructor(private http: HttpClient) { }
 
-  private sourcesUrl = 'http://localhost:8000/api/source';
+  private sourceUrl = 'http://localhost:8000/api/source';
 
   listSources(): Observable<Source[]> {
-  	return this.http.get<Source[]>(this.sourcesUrl).pipe(
+  	return this.http.get<Source[]>(this.sourceUrl).pipe(
 		tap(sources => {
       console.log(`got sources`);
       sources.forEach((source, index, sources) => {
@@ -44,5 +44,20 @@ export class SourceService {
   		console.log(`${operation} failed: ${error.message}`);
   		return of(result as T);
   	};
+  }
+
+  public uploadCSV(csvFile: File, source: Source): Observable<any> {
+    if (csvFile.type !== 'text/csv') {
+      console.log('not a csv file');
+      return of(0);
+    }
+    var httpOpts = {
+      headers: new HttpHeaders({
+        'Content-Type': csvFile.type,
+        'Content-Disposition': 'attachment; filename=' + csvFile
+      })
+    };
+
+    return this.http.put<any>(this.sourceUrl + '/' + source.id + '/locationMapper', csvFile, httpOpts);
   }
 }

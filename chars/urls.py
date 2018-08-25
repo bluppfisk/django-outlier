@@ -18,5 +18,5 @@ urlpatterns = [
     path('api/char/<int:pk>/altchar', views.AltCharAPIView.as_view(), name="altchar-create-api"),
     path('api/char/<int:pk>/altchar/<int:ac_pk>', views.AltCharAPIView.as_view(), name="altchar-detail-api"),
     path('api/source', views.SourceListAPIView.as_view(), name="source-list-api"),
-    path('api/mapper/<int:pk>', views.MapperAPIView.as_view(), name="mapper-api")
+    path('api/source/<int:pk>/locationMapper', views.MapperAPIView.as_view(), name="mapper-api")
 ]

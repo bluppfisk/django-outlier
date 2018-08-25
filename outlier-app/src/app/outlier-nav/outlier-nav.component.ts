@@ -9,12 +9,16 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./outlier-nav.component.css']
 })
 export class OutlierNavComponent {
-
+	fileForm: boolean = false;
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches)
     );
     
   constructor(private breakpointObserver: BreakpointObserver) {}
-  
+
+  showFileForm(): void {
+  	this.fileForm = true;
+  }
+
   }

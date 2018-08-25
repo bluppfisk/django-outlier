@@ -19,6 +19,9 @@ class MapperAPIView(generics.GenericAPIView):
     parser_classes = (FileUploadParser, )
 
     def put(self, request, *args, **kwargs):
+        print('hi')
+        print(request.FILES)
+        print('oi')
         file = request.FILES['file']
         source = Source.objects.get(pk=kwargs.pop('pk'))
         locations = CSVFileReader.read(file)
