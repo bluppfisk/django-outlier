@@ -19,9 +19,6 @@ class MapperAPIView(generics.GenericAPIView):
     parser_classes = (FileUploadParser, )
 
     def put(self, request, *args, **kwargs):
-        print('hi')
-        print(request.FILES)
-        print('oi')
         file = request.FILES['file']
         source = Source.objects.get(pk=kwargs.pop('pk'))
         locations = CSVFileReader.read(file)
@@ -42,12 +39,13 @@ class CharListAPIView(generics.ListCreateAPIView):
                 if j not in sources:
                     sources.append(j)
 
-        data = CharSerializer(qset, many=True).data
-        sources = SourceSerializer(sources, many=True).data
-        return Response({
-            'chars': data,
-            'sources': sources,
-        })
+        return Response(CharSerializer(qset, many=True).data)
+        # data = CharSerializer(qset, many=True).data
+        # sources = SourceSerializer(sources, many=True).data
+        # return Response({
+        #     'chars': data,
+        #     'sources': sources,
+        # })
 
 
 class AltCharAPIView(generics.GenericAPIView):
@@ -61,7 +59,6 @@ class AltCharAPIView(generics.GenericAPIView):
             "source": Source.objects.get(pk=data.get('source')),
             "canonical": Char.objects.get(pk=kwargs.pop('pk'))
         })
-        print(data)
         # char = Char.objects.get(pk=kwargs.pop('pk'))
         # ac = AltChar.objects.create(**data)
         # serializer = AltCharSerializer(data=data)

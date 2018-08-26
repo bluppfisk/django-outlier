@@ -65,7 +65,6 @@ class LocationSourceMapper:
             char, c_created = Char.objects.get_or_create(
                 name=name,
             )
-            print(char)
 
             location, l_created = CharInSource.objects.get_or_create(
                 source=source,

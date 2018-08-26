@@ -35,8 +35,19 @@ export class SourceService {
   	);
   }
 
-  findSourceById(id: number): Source {
-    return this.sources.find(s => s.id === id)
+  addSource(source: Source): Observable<Source> {
+    return this.http.post<Source>(this.sourceUrl, source).pipe(
+      tap(source => {
+        console.log(`source added`);
+        source = new Source().deserialise(source);
+        this.sources.push(source);
+      },
+      catchError(this.handleError<Source[]>('Sources'))
+     ));
+  }
+
+  findSourceById(id: number): Source | null {
+    return this.sources.find(s => s.id === id);
   }
 
   private handleError<T> (operation = 'operation', result?: T) {
