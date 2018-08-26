@@ -20,7 +20,6 @@ export class CSVUploadFormComponent implements OnInit {
   ngOnInit() {
   	this.sourceService.listSources()
   	 .subscribe(sources => {
-  	 	console.log(sources);
   	 	this.sources = sources;
   	 });
   }
@@ -41,7 +40,6 @@ export class CSVUploadFormComponent implements OnInit {
   	}
   	this.sourceService.uploadCSV(this.csvFile, this.source)
   		.subscribe(data => {
-  			console.log(data);
   			this.error = data.numberAdded + " locations added to " + this.source.title + "!";
   		});
   }

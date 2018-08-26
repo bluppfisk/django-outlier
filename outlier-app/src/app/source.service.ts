@@ -23,6 +23,9 @@ export class SourceService {
   private sourceUrl = 'http://localhost:8000/api/source';
 
   listSources(): Observable<Source[]> {
+    if (this.sources.length > 0) {
+      return of(this.sources);
+    }
   	return this.http.get<Source[]>(this.sourceUrl).pipe(
 		tap(sources => {
       console.log(`got sources`);
@@ -35,15 +38,20 @@ export class SourceService {
   	);
   }
 
+  fileToS3(file: File): Observable<string> {
+    if (!file || file.type !== "application/pdf") {
+      console.log('no file or not a pdf file');
+      return of(null);
+    }
+    // TODO implement upload to S3
+  }
+
+  updateSource(source: Source): Observable<Source> {
+    return this.http.put<Source>(this.sourceUrl, source);
+  }
+
   addSource(source: Source): Observable<Source> {
-    return this.http.post<Source>(this.sourceUrl, source).pipe(
-      tap(source => {
-        console.log(`source added`);
-        source = new Source().deserialise(source);
-        this.sources.push(source);
-      },
-      catchError(this.handleError<Source[]>('Sources'))
-     ));
+    return this.http.post<Source>(this.sourceUrl, source);
   }
 
   findSourceById(id: number): Source | null {

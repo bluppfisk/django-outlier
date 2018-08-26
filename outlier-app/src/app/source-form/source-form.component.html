@@ -1,11 +1,11 @@
 <mat-card *ngIf="editing == false" class="sourceCard">
-<mat-card-header>
+  <mat-card-header>
     <mat-card-title>{{ source.title }}</mat-card-title>
     <mat-card-subtitle>{{ source.author }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-  	<p>offset: {{ source.offset }} page(s)</p>
-  	<p>file: <a href="{{ source.file }}">link</a></p>
+    <p>offset: {{ source.offset }} page(s)</p>
+    <p>file: <a href="{{ source.file }}">link</a></p>
   </mat-card-content>
   <mat-divider></mat-divider>
   <mat-card-actions>
@@ -13,22 +13,26 @@
     <button mat-button color="warn" (click)="deleteSource()">Delete</button>
   </mat-card-actions>
 </mat-card>
-<form (ngSubmit)="addSource()" #newSource="ngForm" *ngIf="editing == true">
+<form #newSource="ngForm" *ngIf="editing == true">
   <mat-card>
-    <mat-form-field>
-      <input matInput [(ngModel)]="source.title" name="title" placeholder="Title">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput [(ngModel)]="source.author" name="author" placeholder="Author">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput [(ngModel)]="source.offset" name="offset" placeholder="offset">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput [(ngModel)]="source.file" name="file" placeholder="File">
-    </mat-form-field>
-    <button *ngIf="source.id == null" mat-button type="submit" color="primary">Add</button>
-    <button *ngIf="source.id != null" mat-button type="submit" color="primary">Save</button>
-    <button *ngIf="source.id != null" mat-button type="button" (click)="cancelEdit()" color="warn">Cancel</button>
+    <mat-card-content>
+      <mat-form-field>
+        <input matInput [(ngModel)]="source.title" name="title" placeholder="Title">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [(ngModel)]="source.author" name="author" placeholder="Author">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [(ngModel)]="source.offset" name="offset" placeholder="offset">
+      </mat-form-field>
+      <input (change)="handleFileInput($event.target.files)" type="file" id="sourcefile" style="display:none;">
+      <button onclick="document.getElementById('sourcefile').click()">Choose file</button><span *ngIf="sourceFile">{{ sourceFile.name }}</span>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-actions>
+      <button *ngIf="source.id == null" mat-button color="primary" (click)="addSource()">Add</button>
+      <button *ngIf="source.id != null" mat-button color="primary" (click)="saveSource()">Save</button>
+      <button *ngIf="source.id != null" mat-button (click)="cancelEdit()" color="warn">Cancel</button>
+    </mat-card-actions>
   </mat-card>
 </form>

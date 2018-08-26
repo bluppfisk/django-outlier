@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import generics
+from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
 # from rest_framework.permissions import IsAdminUser
@@ -125,9 +126,16 @@ class LocationAPIView(generics.GenericAPIView):
         return Response(CharInSourceSerializer(cis).data)
 
 
-class SourceListAPIView(generics.ListAPIView):
-    queryset = Source.objects.all()
-    serializer_class = SourceSerializer
+class SourceListAPIView(generics.GenericAPIView):
+    def get(self, request, *args, **kwargs):
+        sources = Source.objects.all()
+        return Response(SourceSerializer(sources, many=True).data)
+
+    def put(self, request, *args, **kwargs):
+        source_data = request.data
+        source = Source(**source_data)
+
+        return Response(SourceSerializer(source).data)
 
 
 class CharAPIView(generics.RetrieveAPIView):
@@ -160,8 +168,7 @@ class CharAPIView(generics.RetrieveAPIView):
         char_in_source = CharInSource(source=source, char=char, page=page)
         # char_in_source.save()
 
-        response = CharSerializer(char).data
-        return Response(response)
+        return Response(CharSerializer(char).data)
 
 
 class IndexView(generic.ListView):
