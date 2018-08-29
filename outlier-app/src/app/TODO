@@ -1,5 +1,10 @@
-TODO
+# TODO
 
 * If char.location is deleted but there are still altchars on it, altchar's source must be reset or altchars must be removed
+* log in method
 * CSRF validation
 * remove CORS headers
+
+* implement delete sources and confirmation process
+* upload sources to AWS lambda from frontend (using presigned key)
+* split PDF files into separate jpg files (AWS lambda)
