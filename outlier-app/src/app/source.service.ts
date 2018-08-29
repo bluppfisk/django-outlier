@@ -68,7 +68,7 @@ export class SourceService {
   public uploadCSV(csvFile: File, source: Source): Observable<any> {
     if (csvFile.type !== 'text/csv') {
       console.log('not a csv file');
-      return of(0);
+      return of({ "numberAdded": 0 });
     }
     var httpOpts = {
       headers: new HttpHeaders({

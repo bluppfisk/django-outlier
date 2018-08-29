@@ -8,5 +8,5 @@
 </mat-form-field>
 <button (click)="uploadCSV()" [disabled]="!source || csvFile === null || csvFile.type !== 'text/csv'">Upload</button>
 <div *ngIf="error">
-	{{ error }}!
+	{{ error }}
 </div>

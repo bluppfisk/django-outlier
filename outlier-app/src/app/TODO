@@ -1,3 +1,5 @@
 TODO
 
-If char.location is deleted but there are still altchars on it, altchar's source must be reset or altchars must be removed
+* If char.location is deleted but there are still altchars on it, altchar's source must be reset or altchars must be removed
+* CSRF validation
+* remove CORS headers
