@@ -11,11 +11,13 @@
 }
 
 .md-card-100 {
+	box-sizing: border-box;
 	width: 100%;
 }
 
 .md-card-50 {
-	width: 100%;
+	box-sizing: border-box;
+	width: 50%;
 }
 
 .flexrow {

@@ -30,6 +30,7 @@ class MapperAPIView(generics.GenericAPIView):
 
 class CharListAPIView(generics.ListCreateAPIView):
     queryset = Char.objects.all()
+    serializer_class = CharSerializer
 
     def list(self, request):
         qset = self.get_queryset()
