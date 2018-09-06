@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 import dj_database_url
+import datetime
 
 from decouple import config
 
@@ -66,8 +67,25 @@ CORS_ORIGIN_WHITELIST = (
 
 CORS_ALLOW_HEADERS = (
     'content-type',
-    'content-disposition'
+    'content-disposition',
+    'authorization',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
+}
 
 ROOT_URLCONF = 'outlier.urls'
 

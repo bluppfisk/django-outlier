@@ -4,12 +4,9 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Source } from './source';
+import { UserService } from './user.service';
 
-const httpOptions = {
-	headers: new HttpHeaders({
-		'Content-Type': 'application/json'
-	})
-}
+const sourceUrl: string = 'http://localhost:8000/api/source';
 
 @Injectable({
   providedIn: 'root'
@@ -18,15 +15,23 @@ const httpOptions = {
 export class SourceService {
   sources: Source[] = [];
 
-  constructor(private http: HttpClient) { }
-
-  private sourceUrl = 'http://localhost:8000/api/source';
+  constructor(
+    private http: HttpClient,
+    private userService: UserService
+   ) { } 
 
   listSources(): Observable<Source[]> {
+    var httpOptions = {
+      headers: new HttpHeaders({
+        // 'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.userService.token
+      })
+    };
+
     if (this.sources.length > 0) {
       return of(this.sources);
     }
-  	return this.http.get<Source[]>(this.sourceUrl).pipe(
+  	return this.http.get<Source[]>(sourceUrl, httpOptions).pipe(
 		tap(sources => {
       console.log(`got sources`);
       sources.forEach((source, index, sources) => {
@@ -47,11 +52,23 @@ export class SourceService {
   }
 
   updateSource(source: Source): Observable<Source> {
-    return this.http.put<Source>(this.sourceUrl, source);
+    var httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.userService.token
+      })
+    };
+    return this.http.put<Source>(sourceUrl, source, httpOptions);
   }
 
   addSource(source: Source): Observable<Source> {
-    return this.http.post<Source>(this.sourceUrl, source);
+    var httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.userService.token
+      })
+    };
+    return this.http.post<Source>(sourceUrl, source, httpOptions);
   }
 
   findSourceById(id: number): Source | null {
@@ -70,13 +87,14 @@ export class SourceService {
       console.log('not a csv file');
       return of({ "numberAdded": 0 });
     }
-    var httpOpts = {
+    var httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': csvFile.type,
-        'Content-Disposition': 'attachment; filename=' + csvFile
+        'Content-Disposition': 'attachment; filename=' + csvFile,
+        'Authorization': 'JWT ' + this.userService.token
       })
     };
 
-    return this.http.put<any>(this.sourceUrl + '/' + source.id + '/locationMapper', csvFile, httpOpts);
+    return this.http.put<any>(sourceUrl + '/' + source.id + '/locationMapper', csvFile, httpOptions);
   }
 }

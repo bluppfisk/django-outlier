@@ -1,5 +1,4 @@
 import { Serialisable } from './serialisable';
-import { SourceService } from './source.service';
 
 export class Source implements Serialisable {
 	constructor () {}

@@ -1,1 +1,27 @@
-<app-outlier-nav></app-outlier-nav>
+<div *ngIf="!userService.token">
+  <h2>Log In</h2>
+  <div class="row">
+    <div class="col-sm-4">
+      <label>Username:</label>
+      <br />
+      <input type="text" name="login-username" [(ngModel)]="user.username">
+      <span *ngFor="let error of userService.errors.username"><br />
+    {{ error }}</span></div>
+    <div class="col-sm-4">
+      <label>Password:</label>
+      <br />
+      <input type="password" name="login-password" [(ngModel)]="user.password">
+      <span *ngFor="let error of userService.errors.password"><br />
+    {{ error }}</span>
+    </div>
+    <div class="col-sm-4">
+      <button (click)="login()" class="btn btn-primary">Log In</button>
+    </div>
+    <div class="col-sm-12">
+      <span *ngFor="let error of userService.errors.non_field_errors">{{ error }}<br /></span>
+    </div>
+  </div>
+</div>
+<div *ngIf="userService.token">
+  <app-outlier-nav></app-outlier-nav>
+</div>

@@ -7,12 +7,9 @@ import { Char } from './char';
 import { AltChar } from './altchar';
 import { Location } from './location';
 import { Source } from './source';
+import { UserService } from './user.service';
 
-const httpOptions = {
-	headers: new HttpHeaders({
-		'Content-Type': 'application/json'
-	})
-}
+const charUrl = 'http://localhost:8000/api/char';
 
 @Injectable({
   providedIn: 'root'
@@ -20,14 +17,22 @@ const httpOptions = {
 
 export class CharService {
 
-  constructor(private http: HttpClient) { 
-  }
-
-  private charUrl = 'http://localhost:8000/api/char';
+  constructor(
+    private http: HttpClient,
+    private userService: UserService
+  ) {}
 
   getChar(id: number): Observable<any> {
-  	const url = `${this.charUrl}/${id}`;
-  	return this.http.get<any>(url).pipe(
+  	const url = `${charUrl}/${id}`;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.userService.token
+      })
+    };
+
+  	return this.http.get<any>(url, httpOptions).pipe(
 		tap(data => {
 			this.log(`got char`);
       data.sources.forEach((source, index, sources) => {
@@ -46,16 +51,27 @@ export class CharService {
   }
 
   addLocation(newLocation: Location, char: Char): Observable<Char> {
-    return this.http.post<Char>(this.charUrl + '/' + char.id + '/location', newLocation, httpOptions).pipe(
+    var httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.userService.token
+      })
+    };
+    return this.http.post<Char>(charUrl + '/' + char.id + '/location', newLocation, httpOptions).pipe(
       tap(char => {
         console.log(`updated char with new location`);
       })
-    )
+    );
   }
 
   deleteLocation(location: Location, char: Char): Observable<Char> {
-    console.log(location);
-    return this.http.delete<Char>(this.charUrl + '/' + char.id + '/location/' + location.id, httpOptions).pipe(
+    var httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.userService.token
+      })
+    };
+    return this.http.delete<Char>(charUrl + '/' + char.id + '/location/' + location.id, httpOptions).pipe(
       tap(char => {
         console.log(`deleted location from char`);
       })
@@ -63,8 +79,15 @@ export class CharService {
   }
 
   addAltChar(altChar: AltChar, char: Char): Observable<AltChar> {
+    var httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.userService.token
+      })
+    };
     var payload = altChar.serialise();
-    return this.http.post<AltChar>(this.charUrl + '/' + char.id + '/altchar', payload, httpOptions).pipe(
+
+    return this.http.post<AltChar>(charUrl + '/' + char.id + '/altchar', payload, httpOptions).pipe(
       tap(char => {
         console.log(`new altchar added/updated`);
       })
@@ -73,7 +96,7 @@ export class CharService {
 
   // updateAltChar(altChar: AltChar, char: Char): Observable<AltChar> {
   //     var payload = altChar.serialise();
-  //     return this.http.put<AltChar>(this.charUrl + '/' + char.id + '/altchar', payload, httpOptions).pipe(
+  //     return this.http.put<AltChar>(charUrl + '/' + char.id + '/altchar', payload, httpOptions).pipe(
   //       tap(char => {
   //         console.log(`updated altchar`);
   //       })
@@ -81,7 +104,14 @@ export class CharService {
   // }
 
   deleteAltChar(altChar: AltChar, char: Char): Observable<Char> {
-    return this.http.delete<Char>(this.charUrl + '/' + char.id + '/altchar/' + altChar.id, httpOptions).pipe(
+    var httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.userService.token
+      })
+    };
+
+    return this.http.delete<Char>(charUrl + '/' + char.id + '/altchar/' + altChar.id, httpOptions).pipe(
       tap(char => {
         console.log(`deleted altchar from char`);
       })
@@ -94,6 +124,13 @@ export class CharService {
   	}
 
   	term = term.trim();
+
+    var httpOptions = {
+      headers: new HttpHeaders({
+        // 'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.userService.token
+      })
+    };
 
   	return this.http.get<any>(`http://localhost:8000/api/char/${term}`).pipe(
   		tap(_ => this.log(`matching char found`)),

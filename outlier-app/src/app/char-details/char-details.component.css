@@ -11,13 +11,19 @@
 }
 
 .md-card-100 {
+	min-height: 80%;
 	box-sizing: border-box;
 	width: 100%;
 }
 
 .md-card-50 {
+	min-height: 80%;
 	box-sizing: border-box;
 	width: 50%;
+}
+
+iframe {
+	height: 100%;
 }
 
 .flexrow {

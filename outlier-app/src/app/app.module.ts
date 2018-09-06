@@ -2,14 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatFormFieldModule, MatSelectModule, MatInputModule, MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatSortModule, MatExpansionModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
 import { RouterModule, Routes } from '@angular/router';
 
 import { OutlierNavComponent } from './outlier-nav/outlier-nav.component';
@@ -23,6 +20,7 @@ import { SourceFormComponent } from './source-form/source-form.component';
 
 import { CharService } from './char.service';
 import { SourceService } from './source.service';
+import { UserService } from './user.service';
 
 const appRoutes: Routes = [
 	{ path: 'char/:id', component: CharDetailsComponent },
@@ -68,7 +66,8 @@ const appRoutes: Routes = [
   ],
   providers: [
   	CharService,
-    SourceService
+    SourceService,
+    UserService,
   ],
   bootstrap: [AppComponent]
 })
