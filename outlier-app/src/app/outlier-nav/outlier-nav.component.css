@@ -25,10 +25,12 @@
 }
 
 .searchBar {
-	margin-left: 25px;
+	width: 300px;
+	padding-right: 1em;
 }
 
 .searchBar mat-icon {
+	cursor: pointer;
 	top: 5px;
 	left: 28px;
 	position: relative;
@@ -56,16 +58,15 @@
 }
 
 .recents {
-	margin-left: 24px;
-	width: 200px;
-	display: flex;
-	position: absolute;
-	z-index: 200;
-	background-color: rgba(103, 58, 183, 0.9);
+	pointer-events: none;
+	margin-left: -5.1em;
+	width: 5em;
+	color: #673ab7;
+	display: inline-block;
+	text-align: right;
 }
 
-.recents ul li {
-	list-style: none;
+.recents > * {
+	pointer-events: all;
 	cursor: pointer;
-	display: inline-block;
 }

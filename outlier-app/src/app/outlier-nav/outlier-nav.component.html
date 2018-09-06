@@ -3,11 +3,9 @@
     <span>Outlier Tool</span>
     <span class="fill-remaining-space"></span>
     <span class="searchBar">
-      <mat-icon (keyup.enter)="search()" matPrefix>search</mat-icon>
-      <input matInput [(ngModel)]="term" (click)="showRecents = true" (blur)="showRecents = false" (focus)="showRecents = true" (keyup.enter)="search()" placeholder="Character Lookup">
-      <div class="recents" [style.display]="showRecents ? 'block' : 'none'">
-        <ul><li *ngFor="let recent of recents" (click)="searchRecent(recent)">{{ recent }}</li></ul>
-      </div>
+      <mat-icon (click)="search()" matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="term" maxlength="1" (keyup.enter)="search()" placeholder="Character Lookup">
+      <span class="recents"><span *ngFor="let recent of recents" (click)="searchRecent(recent)">{{ recent }}</span></span>
     </span>
     <span class="fill-remaining-space"></span>
     <span>

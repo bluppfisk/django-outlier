@@ -16,7 +16,7 @@ import { AltCharFormComponent } from '../alt-char-form/alt-char-form.component'
 
 export class CharDetailsComponent implements OnInit {
 	@Input() char: Char;
-  private loading: boolean = true;
+  private loading: boolean = false;
 	private sources: Source[];
   private selectedLocation: Location;
 
@@ -25,6 +25,10 @@ export class CharDetailsComponent implements OnInit {
   	private charService: CharService,
     private sourceService: SourceService,
   ) { }
+
+  onInit() {
+    this.loading = false;
+  }
 
   addLocation(sourceId: number, pageNo: number): void {
     if (pageNo < 1 || !sourceId) {
