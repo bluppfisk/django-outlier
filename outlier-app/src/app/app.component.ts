@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from './user.service';
 import { throwError } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-root',
@@ -10,22 +11,19 @@ import { throwError } from 'rxjs';
 
 export class AppComponent implements OnInit {
   title = 'Outlier Tool';
-
-  public user: any;
+  private username: string = "";
+  private password: string = "";
+  private showSpinner: boolean = false;
 
   constructor (private userService: UserService) {}
 
-  ngOnInit() {
-  	this.user = {
-  		username: '',
-  		password: ''
-  	};
-  }
+  ngOnInit() { }
 
   login() {
+  	this.showSpinner = true;
   	this.userService.login({
-  		'username': this.user.username,
-  		'password': this.user.password
+  		'username': this.username,
+  		'password': this.password
   	});
   }
 

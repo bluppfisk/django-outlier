@@ -127,12 +127,12 @@ export class CharService {
 
     var httpOptions = {
       headers: new HttpHeaders({
-        // 'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': 'JWT ' + this.userService.token
       })
     };
 
-  	return this.http.get<any>(`http://localhost:8000/api/char/${term}`).pipe(
+  	return this.http.get<any>("http://localhost:8000/api/char/" + term, httpOptions).pipe(
   		tap(_ => this.log(`matching char found`)),
   		catchError(this.handleError<any>('searchChar'))
   	);

@@ -23,7 +23,7 @@ export class SourceService {
   listSources(): Observable<Source[]> {
     var httpOptions = {
       headers: new HttpHeaders({
-        // 'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': 'JWT ' + this.userService.token
       })
     };
@@ -31,6 +31,7 @@ export class SourceService {
     if (this.sources.length > 0) {
       return of(this.sources);
     }
+
   	return this.http.get<Source[]>(sourceUrl, httpOptions).pipe(
 		tap(sources => {
       console.log(`got sources`);

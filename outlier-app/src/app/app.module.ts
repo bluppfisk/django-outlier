@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
-import { MatFormFieldModule, MatSelectModule, MatInputModule, MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatSortModule, MatExpansionModule } from '@angular/material';
+import { MatFormFieldModule, MatSelectModule, MatInputModule, MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatSortModule, MatExpansionModule, MatProgressSpinnerModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -21,6 +21,7 @@ import { SourceFormComponent } from './source-form/source-form.component';
 import { CharService } from './char.service';
 import { SourceService } from './source.service';
 import { UserService } from './user.service';
+import * as moment from "moment";
 
 const appRoutes: Routes = [
 	{ path: 'char/:id', component: CharDetailsComponent },
@@ -59,6 +60,7 @@ const appRoutes: Routes = [
     MatPaginatorModule,
     MatSortModule,
     MatExpansionModule,
+    MatProgressSpinnerModule,
     HttpClientModule,
     MatFormFieldModule,
     RouterModule.forRoot(appRoutes),

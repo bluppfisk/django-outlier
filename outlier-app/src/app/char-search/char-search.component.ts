@@ -13,6 +13,7 @@ import { CharService } from "../char.service";
   templateUrl: './char-search.component.html',
   styleUrls: ['./char-search.component.css']
 })
+
 export class CharSearchComponent implements OnInit {
   constructor(
     private charService: CharService,
