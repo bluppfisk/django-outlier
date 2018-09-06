@@ -10,7 +10,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 
 import { OutlierNavComponent } from './outlier-nav/outlier-nav.component';
-import { CharSearchComponent } from './char-search/char-search.component';
 import { CharDetailsComponent } from './char-details/char-details.component';
 import { AltCharFormComponent } from './alt-char-form/alt-char-form.component';
 import { CSVUploadFormComponent } from './csvupload-form/csvupload-form.component';
@@ -34,7 +33,6 @@ const appRoutes: Routes = [
     AppComponent,
     CharDetailsComponent,
     OutlierNavComponent,
-    CharSearchComponent,
     AltCharFormComponent,
     SourceBrowserComponent,
     CSVUploadFormComponent,

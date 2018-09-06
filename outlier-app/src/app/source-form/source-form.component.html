@@ -14,7 +14,7 @@
   </mat-card-actions>
 </mat-card>
 <form #newSource="ngForm" *ngIf="editing == true">
-  <mat-card>
+  <mat-card class="sourceCard">
     <mat-card-content>
       <mat-form-field>
         <input matInput [(ngModel)]="source.title" name="title" placeholder="Title">

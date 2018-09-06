@@ -2,6 +2,10 @@
 	cursor: pointer;
 }
 
+.view {
+	padding: 5px 10px;
+}
+
 .sidenav-container {
   height: 100%;
 }
@@ -10,11 +14,58 @@
   width: 200px;
 }
 
-.mat-toolbar.mat-primary {
+.mat-toolbar .mat-primary {
   position: sticky;
   top: 0;
+  z-index: 100;
 }
 
 .fill-remaining-space {
 	flex: 1 1 auto;
+}
+
+.searchBar {
+	margin-left: 25px;
+}
+
+.searchBar mat-icon {
+	top: 5px;
+	left: 28px;
+	position: relative;
+	color: #673ab7;
+}
+
+.searchBar input {
+	background-color: white;
+	color: #673ab7;
+	border-radius: 5px;
+	padding-left: 28px;
+}
+
+.searchBar input::placeholder {
+	padding-left: 28px;
+}
+
+.mat-toolbar-tools {
+	display: flex;
+	width: 100%;
+}
+
+.mat-button-wrapper > * {
+	margin-right: 5px;
+}
+
+.recents {
+	margin-left: 24px;
+	width: 200px;
+	display: flex;
+	position: absolute;
+	z-index: 200;
+	background-color: rgba(103, 58, 183, 0.9);
+}
+
+.recents ul li {
+	list-style: none;
+	cursor: pointer;
+	display: inline-block;
 }

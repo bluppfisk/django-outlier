@@ -1,10 +1,34 @@
 <mat-toolbar color="primary">
-  <span>Outlier Tool</span>
-  <span class="fill-remaining-space"></span>
-  <app-char-search></app-char-search>
-  <span class="fill-remaining-space"></span>
-  <mat-icon class="navItem" routerLink="source" title="Manage sources">library_books</mat-icon>
-  <mat-icon class="navItem" routerLink="location/uploadMap" title="Upload location map">backup</mat-icon>
-  <mat-icon class="navItem" (click)="logout()" title="Log out">logout</mat-icon>
+  <div class="mat-toolbar-tools">
+    <span>Outlier Tool</span>
+    <span class="fill-remaining-space"></span>
+    <span class="searchBar">
+      <mat-icon (keyup.enter)="search()" matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="term" (click)="showRecents = true" (blur)="showRecents = false" (focus)="showRecents = true" (keyup.enter)="search()" placeholder="Character Lookup">
+      <div class="recents" [style.display]="showRecents ? 'block' : 'none'">
+        <ul><li *ngFor="let recent of recents" (click)="searchRecent(recent)">{{ recent }}</li></ul>
+      </div>
+    </span>
+    <span class="fill-remaining-space"></span>
+    <span>
+    <a class="navItem mat-button" routerLink="source">
+      <span class="mat-button-wrapper">
+        <mat-icon title="Manage sources">library_books</mat-icon>Sources
+      </span>
+    </a>
+    <a class="navItem mat-button" routerLink="location/uploadMap">
+      <span class="mat-button-wrapper">
+        <mat-icon title="Manage sources">backup</mat-icon>Upload map
+      </span>
+    </a>
+    <a class="navItem mat-button" (click)="logout()">
+      <span class="mat-button-wrapper">
+        <mat-icon title="Manage sources">logout</mat-icon>Logout
+      </span>
+    </a>
+    </span>
+  </div>
 </mat-toolbar>
-<router-outlet></router-outlet>
+<div class="view">
+  <router-outlet></router-outlet>
+</div>

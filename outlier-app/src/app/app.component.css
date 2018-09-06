@@ -2,3 +2,10 @@
 	width: 20%;
 	margin: auto;
 }
+
+.outlierLogo {
+	padding: 30px 0px;
+	max-width: 70%;
+	margin: auto;
+	display: block;
+}

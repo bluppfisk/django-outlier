@@ -1,12 +1,24 @@
-<h2>Upload Locations Map</h2>
-<button onclick="document.getElementById('csv').click()">Choose CSV file</button>
-<input (change)="handleFileInput($event.target.files)" id="csv" type="file" style="display: none">
-<mat-form-field>
-  <mat-select matInput placeholder="Select source" [(ngModel)]="source" name="sourceSelect">
-    <mat-option *ngFor="let source of sources" [value]="source">{{ source.title }}</mat-option>
-  </mat-select>
-</mat-form-field>
-<button (click)="uploadCSV()" [disabled]="!source || csvFile === null || csvFile.type !== 'text/csv'">Upload</button>
+<mat-card class="dialogCard">
+  <mat-card-header>
+    <mat-card-title>
+      Upload Locations Map
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field class="full-width">
+      <mat-select matInput placeholder="Select source" [(ngModel)]="source" name="sourceSelect">
+        <mat-option *ngFor="let source of sources" [value]="source">{{ source.title }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="full-width">
+      <button mat-raised-button class="full-width" onclick="document.getElementById('csv').click()">Choose CSV file</button>
+      <input (change)="handleFileInput($event.target.files)" id="csv" type="file" style="display: none">
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="uploadCSV()" [disabled]="!source || csvFile === null || csvFile.type !== 'text/csv'" color="primary">Upload</button>
+  </mat-card-actions>
+</mat-card>
 <div *ngIf="error">
-	{{ error }}
+  {{ error }}
 </div>

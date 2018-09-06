@@ -1,5 +1,6 @@
-<div *ngIf="!userService.isLoggedIn()">
-  <mat-card class="loginCard">
+<div *ngIf="!userService.isLoggedIn()" class="dialogCard">
+  <img class="outlierLogo" src="assets/outlier-logo.png">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>Login</mat-card-title>
     </mat-card-header>

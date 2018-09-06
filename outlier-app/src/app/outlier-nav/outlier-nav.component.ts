@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 import { UserService } from '../user.service';
+import { CharService } from '../char.service';
 
 @Component({
   selector: 'app-outlier-nav',
@@ -11,19 +12,41 @@ import { UserService } from '../user.service';
   styleUrls: ['./outlier-nav.component.css']
 })
 export class OutlierNavComponent {
-	fileForm: boolean = false;
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches)
-    );
+  private term: string = "";
+  private recents: string[] = [];
+  private showRecents: boolean = false;
     
   constructor(
-    private breakpointObserver: BreakpointObserver,
-    private userService: UserService
+    private userService: UserService,
+    private charService: CharService,
+    private router: Router
    ) {}
 
-  showFileForm(): void {
-  	this.fileForm = true;
+    searchRecent(term: string): void {
+      this.performSearch(term);
+    }
+
+    search(): void {
+      if (this.term == "") {
+        return;
+      }
+      this.recents = [this.term].concat(this.recents.slice(0,4));
+      this.performSearch(this.term);
+      this.term = "";
+  }
+
+
+  performSearch(term: string) {
+    this.showRecents = false;
+    this.charService.searchChar(term)
+        .subscribe(data => {
+            if (data) {
+              var id: string = data.char.id;
+              this.router.navigate(["char/" + id]);
+            } else {
+              this.router.navigate(["char/0"]);
+            }
+     });
   }
 
   logout(): void {
