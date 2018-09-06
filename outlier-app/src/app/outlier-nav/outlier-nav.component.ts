@@ -3,6 +3,8 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { UserService } from '../user.service';
+
 @Component({
   selector: 'app-outlier-nav',
   templateUrl: './outlier-nav.component.html',
@@ -15,10 +17,17 @@ export class OutlierNavComponent {
       map(result => result.matches)
     );
     
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private userService: UserService
+   ) {}
 
   showFileForm(): void {
   	this.fileForm = true;
+  }
+
+  logout(): void {
+    this.userService.logout();
   }
 
   }
