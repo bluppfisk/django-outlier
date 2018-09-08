@@ -3,9 +3,12 @@
 * escape filename issues
 * prevent browser? caching of images
 * delete old file if source updated
+* update locations form if sources added (subscribe)
+* also update sources view
 * If char.location is deleted but there are still altchars on it, altchar's source must be reset or altchars must be removed
 * create better source browser
 
+* error handling everywhere
 * split PDF files into separate jpg files (AWS lambda)
 * get updates for large file uploads
 * implement confirmation process for deletes (sources and altchars)

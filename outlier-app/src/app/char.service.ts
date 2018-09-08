@@ -60,7 +60,7 @@ export class CharService {
       })
     };
 
-    return this.http.post<Char>(charUrl + char.id + '/location', newLocation, httpOptions).pipe(
+    return this.http.post<Char>(charUrl + char.id + '/location/', newLocation, httpOptions).pipe(
       tap(char => {
         console.log(`updated char with new location`);
       })

@@ -1,3 +1,5 @@
+import { environment } from '../../environments/environment';
+
 import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Location } from '../location';
@@ -7,14 +9,16 @@ import { Location } from '../location';
   templateUrl: './source-browser.component.html',
   styleUrls: ['./source-browser.component.css']
 })
+
 export class SourceBrowserComponent implements OnInit {
-  safeLocation: SafeResourceUrl;
+  private safeLocation: SafeResourceUrl;
 
   @Input()
   set location(location: Location) {
+    const sourcePath = environment.s3URL + environment.sourcePath;
   	if (location) {
 	  	this.safeLocation = this.sanitizer.bypassSecurityTrustResourceUrl(
-	  		location.source.file + "#page=" + location.page
+	  		sourcePath + location.source.file + "#page=" + location.page
 	  	);
 	 }
   }
