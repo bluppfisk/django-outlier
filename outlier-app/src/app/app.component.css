@@ -9,3 +9,13 @@
 	margin: auto;
 	display: block;
 }
+
+.full-width {
+	width: 100%;
+}
+
+.error {
+	font-size: .8em;
+	color: red;
+	font-style: italic;
+}

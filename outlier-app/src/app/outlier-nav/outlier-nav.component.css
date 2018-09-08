@@ -26,7 +26,7 @@
 
 .searchBar {
 	width: 300px;
-	padding-right: 1em;
+	padding-right: 3em;
 }
 
 .searchBar mat-icon {
@@ -69,4 +69,8 @@
 .recents > * {
 	pointer-events: all;
 	cursor: pointer;
+}
+
+.recents > *:hover {
+	color: #dd821a;
 }

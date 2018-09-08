@@ -7,7 +7,7 @@
   <mat-card-content>
     <mat-form-field class="full-width">
       <mat-select matInput placeholder="Select source" [(ngModel)]="source" name="sourceSelect">
-        <mat-option *ngFor="let source of sources" [value]="source">{{ source.title }}</mat-option>
+        <mat-option *ngFor="let source of sourceService.sources" [value]="source">{{ source.title }}</mat-option>
       </mat-select>
     </mat-form-field>
     <div class="full-width">

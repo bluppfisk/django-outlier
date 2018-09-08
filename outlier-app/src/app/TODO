@@ -1,8 +1,12 @@
 # TODO
 
+* escape filename issues
+* prevent browser? caching of images
+* delete old file if source updated
 * If char.location is deleted but there are still altchars on it, altchar's source must be reset or altchars must be removed
-* remove CORS headers
+* create better source browser
 
-* implement delete sources and confirmation process
-* upload sources to AWS lambda from frontend (using presigned key)
 * split PDF files into separate jpg files (AWS lambda)
+* get updates for large file uploads
+* implement confirmation process for deletes (sources and altchars)
+* remove CORS headers

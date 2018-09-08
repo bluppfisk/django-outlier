@@ -2,15 +2,19 @@ from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics
-from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
-# from rest_framework.permissions import IsAdminUser
+from rest_framework.decorators import api_view
+import boto3
+import json
+from time import sleep
+from botocore.client import Config
 
 from .serializers import AltCharSerializer, CharSerializer, SourceSerializer, CharInSourceSerializer
-
 from .admin import BulkUpload
 from .models import AltChar, Char, Source, CharInSource
 from .utils import CSVFileReader, LocationSourceMapper
@@ -26,28 +30,6 @@ class MapperAPIView(generics.GenericAPIView):
         map = LocationSourceMapper.map(locations=locations, source=source)
 
         return Response({"numberAdded": len(map)})
-
-
-class CharListAPIView(generics.ListCreateAPIView):
-    queryset = Char.objects.all()
-    serializer_class = CharSerializer
-
-    def list(self, request):
-        qset = self.get_queryset()
-
-        sources = []
-        for i in qset:
-            for j in i.location.all():
-                if j not in sources:
-                    sources.append(j)
-
-        return Response(CharSerializer(qset, many=True).data)
-        # data = CharSerializer(qset, many=True).data
-        # sources = SourceSerializer(sources, many=True).data
-        # return Response({
-        #     'chars': data,
-        #     'sources': sources,
-        # })
 
 
 class AltCharAPIView(generics.GenericAPIView):
@@ -127,7 +109,7 @@ class LocationAPIView(generics.GenericAPIView):
         return Response(CharInSourceSerializer(cis).data)
 
 
-class SourceListAPIView(generics.GenericAPIView):
+class SourceAPIView(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         sources = Source.objects.all()
         return Response(SourceSerializer(sources, many=True).data)
@@ -135,8 +117,21 @@ class SourceListAPIView(generics.GenericAPIView):
     def put(self, request, *args, **kwargs):
         source_data = request.data
         source = Source(**source_data)
+        source.save()
 
         return Response(SourceSerializer(source).data)
+
+    def post(self, request, *args, **kwargs):
+        source_data = request.data
+        source = Source(**source_data)
+        source.save()
+
+        return Response(SourceSerializer(source).data)
+
+
+class SourceDeleteAPIView(generics.DestroyAPIView):
+    lookup_field = "pk"
+    queryset = Source.objects.all()
 
 
 class CharAPIView(generics.RetrieveAPIView):
@@ -236,3 +231,30 @@ def bulk_view(request):
         form = BulkUpload()
         context = {"form": form}
         return render(request, 'admin/bulk.html', context)
+
+
+@csrf_exempt
+@api_view(('POST',))
+def generate_aws_v4_signature(request):
+    data = json.loads(request.body)
+    filetype = data['filetype']
+    filename = data['filename']
+    s3 = boto3.client(
+        's3',
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        region_name=settings.S3DIRECT_REGION,
+        config=Config(signature_version="s3v4")
+    )
+    url = s3.generate_presigned_url(
+        'put_object',
+        Params={
+            'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
+            'Key': filename,
+            'ContentType': filetype
+
+        },
+        HttpMethod='PUT',
+        ExpiresIn=3600
+    )
+    return Response(url)

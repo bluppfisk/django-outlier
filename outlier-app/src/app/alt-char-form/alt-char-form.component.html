@@ -1,6 +1,6 @@
 <mat-card *ngIf="editing == false" class="altCharCard">
   <mat-card-header>
-    <img mat-card-avatar src="{{ altChar.image }}">
+    <img mat-card-avatar class="glue64_img" src="{{ altChar.image ? altChar.image : 'assets/pastehere.png'}}">
     <mat-card-title>{{ altChar.name }}</mat-card-title>
     <mat-card-subtitle>{{ altChar.sequence_no }}</mat-card-subtitle>
   </mat-card-header>
@@ -18,7 +18,7 @@
   <mat-card class="altCharCard" *ngIf="editing">
     <mat-card-header>
       <div mat-card-avatar style="display: inline-block;" (paste)="pasteImage($event)">
-        <img mat-card-avatar src="{{ altChar.image }}" class="glue64_preview" style="pointer-events: none">
+        <img mat-card-avatar src="{{ altChar.image ? altChar.image : 'assets/pastehere.png'}}" class="glue64_preview glue64_img" style="pointer-events: none">
       </div>
       <mat-card-title>
         <mat-form-field>

@@ -1,4 +1,3 @@
-<div *ngIf="!loading; else temp_loading">
   <div class="flexrow" *ngIf="char; else char_404">
     <mat-accordion>
       <mat-expansion-panel>
@@ -17,7 +16,7 @@
           <mat-list-item>
             in &nbsp;
             <mat-form-field>
-              <mat-select placeholder="source" *ngIf="sources" [(value)]="sourceId">
+              <mat-select placeholder="source" [(value)]="sourceId">
                 <mat-option *ngFor="let source of sources" [value]="source.id">{{ source.title }}</mat-option>
               </mat-select>
             </mat-form-field>
@@ -45,10 +44,6 @@
     </mat-accordion>
     <source-browser [location]="selectedLocation"></source-browser>
   </div>
-</div>
-<ng-template #temp_loading>
-  <h2>Loading...</h2>
-</ng-template>
 <ng-template #char_404>
   <h2>Char not found</h2>
 </ng-template>

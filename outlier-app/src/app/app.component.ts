@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from './user.service';
 import { throwError } from 'rxjs';
 import * as moment from 'moment';
+
+import { UserService } from './user.service';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,6 @@ export class AppComponent implements OnInit {
   ngOnInit() { }
 
   login() {
-  	this.showSpinner = true;
   	this.userService.login({
   		'username': this.username,
   		'password': this.password

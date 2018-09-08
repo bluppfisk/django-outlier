@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiURL: 'http://localhost:8000/api/',
+  s3URL: 'https://s3-eu-west-2.amazonaws.com/outlier-linguistics/',
+  sourcePath: 'uploads/sources/',
+  altCharPath: 'uploads/altchars/',
 };
 
 /*

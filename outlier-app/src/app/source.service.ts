@@ -1,12 +1,16 @@
+import { environment } from '../environments/environment';
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Source } from './source';
 import { UserService } from './user.service';
 
-const sourceUrl: string = 'http://localhost:8000/api/source';
+const sourceUrl: string = environment.apiURL + "source/";
+const awsSignatureUrl = environment.apiURL + "get_presigned_url/";
+const sourcePath: string = environment.sourcePath;
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +18,15 @@ const sourceUrl: string = 'http://localhost:8000/api/source';
 
 export class SourceService {
   sources: Source[] = [];
+  sourcesSubject = new Subject<Source[]>();
+  sourcesList = this.sourcesSubject.asObservable();
 
   constructor(
     private http: HttpClient,
-    private userService: UserService
-   ) { } 
+    private userService: UserService,
+   ) { }
 
-  listSources(): Observable<Source[]> {
+  public listSources(): Observable<Source[]> {
     var httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -29,30 +35,24 @@ export class SourceService {
     };
 
     if (this.sources.length > 0) {
+      this.sourcesSubject.next(this.sources);
       return of(this.sources);
     }
 
   	return this.http.get<Source[]>(sourceUrl, httpOptions).pipe(
-		tap(sources => {
-      console.log(`got sources`);
-      sources.forEach((source, index, sources) => {
-        source = new Source().deserialise(source);
-        this.sources.push(source);
-      });
-		}),
-		catchError(this.handleError<Source[]>('Sources'))
-  	);
+  		tap(sources => {
+        console.log(`got sources`);
+        sources.forEach((source, index, sources) => {
+          source = new Source().deserialise(source);
+          this.sources.push(source);
+        });
+        this.sourcesSubject.next(this.sources);
+  		}),
+  		catchError(this.handleError<Source[]>('Sources'))
+    	);
   }
 
-  fileToS3(file: File): Observable<string> {
-    if (!file || file.type !== "application/pdf") {
-      console.log('no file or not a pdf file');
-      return of(null);
-    }
-    // TODO implement upload to S3
-  }
-
-  updateSource(source: Source): Observable<Source> {
+  public updateSource(source: Source): Observable<Source> {
     var httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -62,17 +62,36 @@ export class SourceService {
     return this.http.put<Source>(sourceUrl, source, httpOptions);
   }
 
-  addSource(source: Source): Observable<Source> {
+  public addSource(source: Source): Observable<Source> {
     var httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': 'JWT ' + this.userService.token
       })
     };
-    return this.http.post<Source>(sourceUrl, source, httpOptions);
+    return this.http.post<Source>(sourceUrl, source, httpOptions).pipe(
+      tap(data => {
+        this.sources.push(Object.assign(new Source(), Source.EMPTY_MODEL));
+      })
+    );
   }
 
-  findSourceById(id: number): Source | null {
+public deleteSource(source: Source): Observable<any> {
+  var httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'JWT ' + this.userService.token
+    })
+  };
+
+  return this.http.delete<Source>(sourceUrl + source.id, httpOptions).pipe(
+    tap(data => {
+      this.sources = this.sources.filter(s => s !== source);
+    })
+   );
+}
+
+  public findSourceById(id: number): Source | null {
     return this.sources.find(s => s.id === id);
   }
 
@@ -88,7 +107,7 @@ export class SourceService {
       console.log('not a csv file');
       return of({ "numberAdded": 0 });
     }
-    var httpOptions = {
+    const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': csvFile.type,
         'Content-Disposition': 'attachment; filename=' + csvFile,
@@ -96,6 +115,29 @@ export class SourceService {
       })
     };
 
-    return this.http.put<any>(sourceUrl + '/' + source.id + '/locationMapper', csvFile, httpOptions);
+    return this.http.put<any>(sourceUrl + '/' + source.id + '/locationMapper/', csvFile, httpOptions);
+  }
+
+  public getPresignedURL(file: File): Observable<string> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.userService.token
+      })
+    }
+    const body = {
+      filetype: file.type,
+      filename: sourcePath + file.name
+    }
+
+    return this.http.post<string>(awsSignatureUrl, body, httpOptions);
+  }
+
+  public uploadToS3(file: File, presignedURL: string): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': file.type})
+    }
+
+    return this.http.put(presignedURL, file, httpOptions);
   }
 }

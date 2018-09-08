@@ -1,3 +1,5 @@
+import { environment } from '../../environments/environment';
+
 import { Component, OnInit, Input } from '@angular/core';
 import { Source } from '../source';
 import { SourceService } from '../source.service';
@@ -7,10 +9,13 @@ import { SourceService } from '../source.service';
   templateUrl: './source-form.component.html',
   styleUrls: ['./source-form.component.css']
 })
+
 export class SourceFormComponent implements OnInit {
 	@Input() source: Source;
 	private editing: boolean = false;
+  private uploading: boolean = false;
   private sourceFile: File = null;
+  private pathPrefix: string = environment.s3URL + environment.sourcePath;
 
   constructor(private sourceService: SourceService) { }
 
@@ -19,6 +24,10 @@ export class SourceFormComponent implements OnInit {
   		this.source = Object.assign(new Source(), Source.EMPTY_MODEL);
   		this.editing = true;
   	}
+
+    if (!this.source.id) {
+      this.editing = true;
+    }
   }
 
   handleFileInput(files: FileList) {
@@ -27,27 +36,43 @@ export class SourceFormComponent implements OnInit {
     }
   }
 
-  saveSource() {
+  updateSource() {
     this.editing = false;
-    this.sourceService.updateSource(this.source)
-      .subscribe(data => {
-        this.sourceFile = null;
-        console.log(data);
-        // this.source = Object.assign(new Source(), Source.EMPTY_MODEL);
-      });
+
+    if (this.sourceFile) {
+      this.uploading = true;
+
+      this.sourceService.getPresignedURL(this.sourceFile)
+        .subscribe(presignedURL => {
+          this.sourceService.uploadToS3(this.sourceFile, presignedURL)
+            .subscribe(_ => {
+              this.source.file = this.sourceFile.name;
+              this.uploading = false;
+              this.sourceService.updateSource(this.source).subscribe(_ => this.sourceFile = null);
+            })   
+        })
+      } else {
+        this.sourceService.updateSource(this.source).subscribe();
+      }
+    }
+
+  deleteSource() {
+    this.sourceService.deleteSource(this.source).subscribe();
   }
 
   addSource() {
     this.editing = false;
-  	this.sourceService.fileToS3(this.sourceFile)
-      .subscribe(data => {
-        if (data) {
-          this.sourceService.addSource(this.source)
-            .subscribe(data => {
-              this.source = Object.assign(new Source(), Source.EMPTY_MODEL);
-            })
-        }
-      });
+    this.uploading = true;
+
+    this.sourceService.getPresignedURL(this.sourceFile)
+      .subscribe(presignedURL => {
+        this.sourceService.uploadToS3(this.sourceFile, presignedURL)
+          .subscribe(_ => {
+            this.source.file = this.sourceFile.name;
+            this.uploading = false;    
+            this.sourceService.updateSource(this.source).subscribe(_ => this.sourceFile = null);
+          })   
+      })
   }
 
   edit() {

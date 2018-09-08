@@ -1,16 +1,17 @@
 <mat-card *ngIf="editing == false" class="sourceCard">
+  <mat-progress-bar mode="indeterminate" *ngIf="uploading"></mat-progress-bar>
   <mat-card-header>
     <mat-card-title>{{ source.title }}</mat-card-title>
     <mat-card-subtitle>{{ source.author }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <p>offset: {{ source.offset }} page(s)</p>
-    <p>file: <a href="{{ source.file }}">link</a></p>
+    <p>file: <a href="{{ pathPrefix }}{{ source.file }}">{{ source.file }}</a></p>
   </mat-card-content>
   <mat-divider></mat-divider>
   <mat-card-actions>
-    <button mat-button color="primary" (click)="edit()">Edit</button>
-    <button mat-button color="warn" (click)="deleteSource()">Delete</button>
+    <button mat-button color="primary" (click)="edit()"><mat-icon>edit</mat-icon> Edit</button>
+    <button mat-button color="warn" (click)="deleteSource()"><mat-icon>delete</mat-icon> Delete</button>
   </mat-card-actions>
 </mat-card>
 <form #newSource="ngForm" *ngIf="editing == true">
@@ -25,13 +26,14 @@
       <mat-form-field>
         <input matInput [(ngModel)]="source.offset" name="offset" placeholder="offset">
       </mat-form-field>
-      <input (change)="handleFileInput($event.target.files)" type="file" id="sourcefile" style="display:none;">
-      <button onclick="document.getElementById('sourcefile').click()">Choose file</button><span *ngIf="sourceFile">{{ sourceFile.name }}</span>
+      <input (change)="handleFileInput($event.target.files)" #fileUpload type="file" id="sourcefile" style="display:none;">
+      {{ source.file }}
+      <button (click)="fileUpload.click()">Choose file</button><span *ngIf="sourceFile">{{ sourceFile.name }}</span>
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-actions>
       <button *ngIf="source.id == null" mat-button color="primary" (click)="addSource()">Add</button>
-      <button *ngIf="source.id != null" mat-button color="primary" (click)="saveSource()">Save</button>
+      <button *ngIf="source.id != null" mat-button color="primary" (click)="updateSource()">Save</button>
       <button *ngIf="source.id != null" mat-button (click)="cancelEdit()" color="warn">Cancel</button>
     </mat-card-actions>
   </mat-card>

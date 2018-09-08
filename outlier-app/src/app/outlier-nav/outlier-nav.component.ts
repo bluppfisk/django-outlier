@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, Input } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -11,6 +10,7 @@ import { CharService } from '../char.service';
   templateUrl: './outlier-nav.component.html',
   styleUrls: ['./outlier-nav.component.css']
 })
+
 export class OutlierNavComponent {
   private term: string = "";
   private recents: string[] = [];
@@ -19,20 +19,20 @@ export class OutlierNavComponent {
   constructor(
     private userService: UserService,
     private charService: CharService,
-    private router: Router
+    private router: Router,
    ) {}
 
-    searchRecent(term: string): void {
-      this.performSearch(term);
-    }
+  searchRecent(term: string): void {
+    this.performSearch(term);
+  }
 
-    search(): void {
-      if (this.term == "") {
-        return;
-      }
-      this.recents = [this.term].concat(this.recents.slice(0,4));
-      this.performSearch(this.term);
-      this.term = "";
+  search(): void {
+    if (this.term == "") {
+      return;
+    }
+    this.recents = [this.term].concat(this.recents.slice(0,4));
+    this.performSearch(this.term);
+    this.term = "";
   }
 
 
@@ -52,5 +52,4 @@ export class OutlierNavComponent {
   logout(): void {
     this.userService.logout();
   }
-
-  }
+}

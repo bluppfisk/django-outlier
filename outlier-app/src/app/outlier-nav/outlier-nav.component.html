@@ -4,7 +4,7 @@
     <span class="fill-remaining-space"></span>
     <span class="searchBar">
       <mat-icon (click)="search()" matPrefix>search</mat-icon>
-      <input matInput [(ngModel)]="term" maxlength="1" (keyup.enter)="search()" placeholder="Character Lookup">
+      <input matInput [(ngModel)]="term" maxlength="1" (keyup.enter)="search()" placeholder="漢字">
       <span class="recents"><span *ngFor="let recent of recents" (click)="searchRecent(recent)">{{ recent }}</span></span>
     </span>
     <span class="fill-remaining-space"></span>
@@ -27,6 +27,7 @@
     </span>
   </div>
 </mat-toolbar>
+<loader></loader>
 <div class="view">
   <router-outlet></router-outlet>
 </div>

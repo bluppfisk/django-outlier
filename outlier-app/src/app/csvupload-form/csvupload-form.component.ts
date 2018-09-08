@@ -7,6 +7,7 @@ import { SourceService } from '../source.service';
   templateUrl: './csvupload-form.component.html',
   styleUrls: ['./csvupload-form.component.css']
 })
+
 export class CSVUploadFormComponent implements OnInit {
 	@Input() sources: Source[];
 	private error: string = null;

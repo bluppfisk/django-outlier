@@ -11,6 +11,18 @@ class Source(models.Model):
     file = S3DirectField(dest='sources', max_length=255)
     offset = models.IntegerField(default=0)
 
+    def delete(self, *args, **kwargs):
+        StorageHandler.delete_object(settings.SOURCE_PATH + self.file)
+        super(Source, self).delete(*args, **kwargs)
+
+    def get_full_file_path(self):
+        return "{}{}/{}{}".format(
+            settings.AWS_ACCESS_URL,
+            settings.AWS_STORAGE_BUCKET_NAME,
+            settings.SOURCE_PATH,
+            self.file
+        )
+
     def __str__(self):
         return self.title + " by " + self.author
 

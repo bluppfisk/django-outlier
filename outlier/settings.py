@@ -84,7 +84,7 @@ REST_FRAMEWORK = {
 
 JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
 }
 
 ROOT_URLCONF = 'outlier.urls'
@@ -169,6 +169,7 @@ MEDIA_URL = '/uploads/'
 MEDIA_ROOT = 'uploads'
 
 ALTCHAR_PATH = "uploads/altchars/"
+SOURCE_PATH = "uploads/sources/"
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')

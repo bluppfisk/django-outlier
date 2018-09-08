@@ -1,10 +1,12 @@
+import { environment } from '../environments/environment';
+
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import * as moment from 'moment';
 
-const refreshUrl: string = 'http://localhost:8000/api/token-refresh/';
-const authUrl: string = 'http://localhost:8000/api/token-auth/';
+const refreshUrl: string = environment.apiURL + 'token-refresh/';
+const authUrl: string = environment.apiURL + 'token-auth/';
 
 @Injectable({
   providedIn: 'root'
@@ -87,7 +89,7 @@ export class UserService implements OnInit {
   	this.token_expires = new Date(token_decoded.exp * 1000);
   	this.username = token_decoded.username;
 
-  	// store locally for use
+  	// store locally
   	localStorage.setItem('jwt_token', this.token);
   	localStorage.setItem('jwt_token_expires', JSON.stringify(this.token_expires.valueOf()));
   	localStorage.setItem('jwt_token_username', this.username);
