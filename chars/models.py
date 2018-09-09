@@ -2,6 +2,7 @@ from django.db import models
 from s3direct.fields import S3DirectField
 from glue64.fields import Glue64Field
 from django.conf import settings
+from random import randint
 from .utils import StorageHandler
 
 
@@ -85,7 +86,7 @@ class AltChar(models.Model):
                     settings.ALTCHAR_PATH + filename
                 )
 
-        self.image = filename
+        self.image = "{}?{}".format(filename, randint(0, 3000))
 
         super(AltChar, self).save(*args, **kwargs)
 
