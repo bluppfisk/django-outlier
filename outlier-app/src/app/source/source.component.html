@@ -1,5 +1,5 @@
 <div class="flexrow">
-  <div *ngFor="let source of sources">
+  <div *ngFor="let source of sourceService.sources">
     <source-form [source]="source"></source-form>
   </div>
   <source-form></source-form>

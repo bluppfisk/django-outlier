@@ -69,8 +69,12 @@ export class SourceFormComponent implements OnInit {
         this.sourceService.uploadToS3(this.sourceFile, presignedURL)
           .subscribe(_ => {
             this.source.file = this.sourceFile.name;
-            this.uploading = false;    
-            this.sourceService.updateSource(this.source).subscribe(_ => this.sourceFile = null);
+            this.uploading = false;
+            this.sourceService.addSource(this.source)
+              .subscribe(_ => {
+                this.source = Object.assign(new Source(), Source.EMPTY_MODEL);
+                this.editing = true;
+              });
           })   
       })
   }

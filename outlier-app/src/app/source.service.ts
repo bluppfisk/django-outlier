@@ -17,9 +17,7 @@ const sourcePath: string = environment.sourcePath;
 })
 
 export class SourceService {
-  sources: Source[] = [];
-  sourcesSubject = new Subject<Source[]>();
-  sourcesList = this.sourcesSubject.asObservable();
+  public sources: Source[] = [];
 
   constructor(
     private http: HttpClient,
@@ -34,8 +32,8 @@ export class SourceService {
       })
     };
 
+    // if sources are already loaded, just return from memory
     if (this.sources.length > 0) {
-      this.sourcesSubject.next(this.sources);
       return of(this.sources);
     }
 
@@ -46,20 +44,9 @@ export class SourceService {
           source = new Source().deserialise(source);
           this.sources.push(source);
         });
-        this.sourcesSubject.next(this.sources);
   		}),
   		catchError(this.handleError<Source[]>('Sources'))
     	);
-  }
-
-  public updateSource(source: Source): Observable<Source> {
-    var httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'JWT ' + this.userService.token
-      })
-    };
-    return this.http.put<Source>(sourceUrl, source, httpOptions);
   }
 
   public addSource(source: Source): Observable<Source> {
@@ -71,9 +58,19 @@ export class SourceService {
     };
     return this.http.post<Source>(sourceUrl, source, httpOptions).pipe(
       tap(data => {
-        this.sources.push(Object.assign(new Source(), Source.EMPTY_MODEL));
+        this.sources.push(Object.assign(new Source(), data));
       })
     );
+  }
+
+  public updateSource(source: Source): Observable<Source> {
+    var httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.userService.token
+      })
+    };
+    return this.http.put<Source>(sourceUrl, source, httpOptions);
   }
 
 public deleteSource(source: Source): Observable<any> {

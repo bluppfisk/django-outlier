@@ -6,7 +6,8 @@ import { Char } from '../char';
 import { Source } from '../source';
 import { AltChar } from '../altchar';
 import { Location } from '../location';
-import { AltCharFormComponent } from '../alt-char-form/alt-char-form.component'
+import { AltCharFormComponent } from '../alt-char-form/alt-char-form.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-char-details',
@@ -16,8 +17,8 @@ import { AltCharFormComponent } from '../alt-char-form/alt-char-form.component'
 
 export class CharDetailsComponent implements OnInit {
 	@Input() char: Char;
-	private sources: Source[];
   private selectedLocation: Location;
+  private routeSubscription: Subscription;
 
   constructor(
   	private route: ActivatedRoute,
@@ -25,12 +26,26 @@ export class CharDetailsComponent implements OnInit {
     private sourceService: SourceService,
   ) { }
 
+  ngOnInit() {
+    this.routeSubscription = this.route.params.subscribe(params => {
+      this.getChar(params['id']);
+    });
+  }
+
+  ngOnDestroy() {
+    this.routeSubscription.unsubscribe();
+  }
+
   addLocation(sourceId: number, pageNo: number): void {
     if (pageNo < 1 || !sourceId) {
       return;
     }
 
-    var newLocation: Location = Object.assign(new Location(), {"id": null, "page": pageNo, "source": this.sources.find(s => s.id == sourceId)});
+    var newLocation: Location = Object.assign(new Location(), {
+      source: this.sourceService.findSourceById(sourceId),
+      page: pageNo
+    });
+
 
     this.charService.addLocation(newLocation, this.char)
       .subscribe(data => {
@@ -59,20 +74,7 @@ export class CharDetailsComponent implements OnInit {
     );
   }
 
-  private getSources(): void {
-    this.sourceService.listSources().subscribe(sources => {
-      this.sources = sources;
-    });
-  }
-
   locationSelected(location: Location): void {
     this.selectedLocation = location;
-  }
-
-  ngOnInit() {
-  	this.route.params.subscribe(params => {
-  		this.getChar(params['id']);
-      this.getSources();
-       });
   }
 }

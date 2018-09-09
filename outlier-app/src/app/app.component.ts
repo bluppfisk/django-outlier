@@ -3,6 +3,7 @@ import { throwError } from 'rxjs';
 import * as moment from 'moment';
 
 import { UserService } from './user.service';
+import { SourceService } from './source.service';
 
 @Component({
   selector: 'app-root',
@@ -11,14 +12,19 @@ import { UserService } from './user.service';
 })
 
 export class AppComponent implements OnInit {
-  title = 'Outlier Tool';
+  title = "Outlier Tool";
   private username: string = "";
   private password: string = "";
   private showSpinner: boolean = false;
 
-  constructor (private userService: UserService) {}
+  constructor (
+    private userService: UserService,
+    private sourceService: SourceService
+  ) {}
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.sourceService.listSources().subscribe();
+   }
 
   login() {
   	this.userService.login({

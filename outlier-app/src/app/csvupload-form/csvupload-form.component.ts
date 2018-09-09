@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { Source } from '../source';
 import { SourceService } from '../source.service';
 
@@ -8,22 +8,14 @@ import { SourceService } from '../source.service';
   styleUrls: ['./csvupload-form.component.css']
 })
 
-export class CSVUploadFormComponent implements OnInit {
-	@Input() sources: Source[];
+export class CSVUploadFormComponent {
 	private error: string = null;
 	private source: Source = null;
 	private csvFile: File = null;
 
   constructor(
-  	private sourceService: SourceService,
+  	private sourceService: SourceService
   ) { }
-
-  ngOnInit() {
-  	this.sourceService.listSources()
-  	 .subscribe(sources => {
-  	 	this.sources = sources;
-  	 });
-  }
 
   handleFileInput(files: FileList) {
   	this.csvFile = files.item(0);

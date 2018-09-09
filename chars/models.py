@@ -103,13 +103,17 @@ class AltChar(models.Model):
         )
 
     def get_filename(self):
-        return "{}-evolution-{}-{}-{}-{}.png".format(
+        filename = "{}-evolution-{}-{}-{}-{}.png".format(
             self.canonical.name,
             self.sequence_no,
             self.source.title,
             self.page,
             self.source_obj
         )
+        keepcharacters = (' ', '.', '_', '-')
+        return "".join(c for c in filename if c.isalnum() or c in keepcharacters).rstrip()
+        
+        # "".join([c for c in filename if c.isalpha() or c.isdigit() or c==' ']).rstrip()
 
     class Meta:
         ordering = ['id']

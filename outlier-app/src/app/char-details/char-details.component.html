@@ -17,7 +17,7 @@
             in &nbsp;
             <mat-form-field>
               <mat-select placeholder="source" [(value)]="sourceId">
-                <mat-option *ngFor="let source of sources" [value]="source.id">{{ source.title }}</mat-option>
+                <mat-option *ngFor="let source of sourceService.sources" [value]="source.id">{{ source.title }}</mat-option>
               </mat-select>
             </mat-form-field>
             &nbsp; on &nbsp;
