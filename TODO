@@ -1,6 +1,5 @@
 # TODO
 
-* prevent browser? caching of images
 * delete old file if source updated (add parameter and pop it in view)
 * If char.location is deleted but there are still altchars on it, altchar's source must be reset or altchars must be removed
 * create better source browser
