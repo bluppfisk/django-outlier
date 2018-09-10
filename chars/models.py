@@ -86,6 +86,7 @@ class AltChar(models.Model):
                     settings.ALTCHAR_PATH + filename
                 )
 
+        # below misleads the browser cache after a save operation
         self.image = "{}?{}".format(filename, randint(0, 3000))
 
         super(AltChar, self).save(*args, **kwargs)
@@ -113,8 +114,6 @@ class AltChar(models.Model):
         )
         keepcharacters = (' ', '.', '_', '-')
         return "".join(c for c in filename if c.isalnum() or c in keepcharacters).rstrip()
-        
-        # "".join([c for c in filename if c.isalpha() or c.isdigit() or c==' ']).rstrip()
 
     class Meta:
         ordering = ['id']
