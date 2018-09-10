@@ -73,6 +73,7 @@ export class SourceFormComponent implements OnInit {
             this.sourceService.addSource(this.source)
               .subscribe(_ => {
                 this.source = Object.assign(new Source(), Source.EMPTY_MODEL);
+                this.sourceFile = null;
                 this.editing = true;
               });
           })   

@@ -112,7 +112,7 @@ public deleteSource(source: Source): Observable<any> {
       })
     };
 
-    return this.http.put<any>(sourceUrl + '/' + source.id + '/locationMapper/', csvFile, httpOptions);
+    return this.http.put<any>(sourceUrl + source.id + '/locationMapper/', csvFile, httpOptions);
   }
 
   public getPresignedURL(file: File): Observable<string> {

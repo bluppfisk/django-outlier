@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { SourceService } from '../source.service';
 import { Source } from '../source';
@@ -9,12 +9,8 @@ import { Source } from '../source';
   styleUrls: ['./source.component.css']
 })
 
-export class SourceComponent implements OnInit {
+export class SourceComponent {
 
   constructor(private sourceService: SourceService) { }
-
-  ngOnInit() {
-    console.log(this.sourceService.sources);
-  }
 
 }
