@@ -9,6 +9,7 @@ import { Char } from './char';
 import { AltChar } from './altchar';
 import { Location } from './location';
 import { Source } from './source';
+import { SourceService } from './source.service';
 import { UserService } from './user.service';
 
 const charUrl = environment.apiURL + 'char/';
@@ -22,6 +23,7 @@ export class CharService {
   constructor(
     private http: HttpClient,
     private userService: UserService,
+    private sourceService: SourceService
   ) {}
 
   getChar(id: number): Observable<any> {
@@ -36,17 +38,13 @@ export class CharService {
 
   	return this.http.get<any>(url, httpOptions).pipe(
 		tap(data => {
-			this.log(`got char`);
-      data.sources.forEach((source, index, sources) => {
-        sources[index] = new Source().deserialise(source);
+      data.locations.forEach((location, index, locations) => {
+        locations[index].source = this.sourceService.findSourceById(location.source);
       });
-      data.char.locations.forEach((location, index, locations) => {
-        locations[index].source = data.sources.find(s => s.id == location.source);
+      data.altchars.forEach((altchar, index, altchars) => {
+        altchars[index].source = this.sourceService.findSourceById(altchar.source);
       });
-      data.char.altchars.forEach((altchar, index, altchars) => {
-        altchars[index].source = data.sources.find(s => s.id == altchar.source);
-      });
-      data.char = new Char().deserialise(data.char);
+      data = new Char().deserialise(data);
 		}),
 		catchError(this.handleError<any>('getChar id=${id}'))
   	);

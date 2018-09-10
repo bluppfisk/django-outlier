@@ -1,7 +1,4 @@
-from django.shortcuts import get_list_or_404, get_object_or_404, render
-from django.views import generic
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.csrf import csrf_exempt
@@ -11,7 +8,6 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.decorators import api_view
 import boto3
 import json
-from time import sleep
 from botocore.client import Config
 
 from .serializers import AltCharSerializer, CharSerializer, SourceSerializer, CharInSourceSerializer
@@ -19,6 +15,10 @@ from .admin import BulkUpload
 from .models import AltChar, Char, Source, CharInSource
 from .utils import CSVFileReader, LocationSourceMapper
 
+
+###
+# Receives a CSV file with character => [page, source] mappings
+# and a Source object to be processed by LocationSourceMapper
 
 class MapperAPIView(generics.GenericAPIView):
     parser_classes = (FileUploadParser, )
@@ -31,6 +31,9 @@ class MapperAPIView(generics.GenericAPIView):
 
         return Response({"numberAdded": len(map)})
 
+
+###
+# Deals with creating, updating and deleting historical forms of characters
 
 class AltCharAPIView(generics.GenericAPIView):
     serializer_class = AltCharSerializer
@@ -81,6 +84,9 @@ class AltCharAPIView(generics.GenericAPIView):
         return Response(AltCharSerializer([m for m in AltChar.objects.filter(canonical=char)], many=True).data)
 
 
+##
+# CRUD for Location (character => [source, page])
+
 class LocationAPIView(generics.GenericAPIView):
     serializer_class = CharInSourceSerializer
     queryset = CharInSource.objects.all()
@@ -106,8 +112,9 @@ class LocationAPIView(generics.GenericAPIView):
         cis = CharInSource(source=source, page=page, char=char)
         cis.save()
 
-        return Response(CharInSourceSerializer(cis).data)
 
+###
+# Create, Read and Update for Source objects
 
 class SourceAPIView(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
@@ -128,18 +135,22 @@ class SourceAPIView(generics.GenericAPIView):
 
         return Response(SourceSerializer(source).data)
 
+###
+# A bit more DRF-like, using actual DestroyAPIView
 
 class SourceDeleteAPIView(generics.DestroyAPIView):
     lookup_field = "pk"
     queryset = Source.objects.all()
 
 
+###
+# Returns a Character object with its details
+
 class CharAPIView(generics.RetrieveAPIView):
-    queryset = Char.objects.all()
-    lookup_field = "name"
     serializer_class = CharSerializer
 
-    def retrieve(self, *args, **kwargs):
+    # Parameter in API URL can be either id or name. Deal with both cases here.
+    def get_object(self):
         pk = self.kwargs.pop('pk', None)
         if pk:
             instance = get_object_or_404(Char, pk=pk)
@@ -147,72 +158,11 @@ class CharAPIView(generics.RetrieveAPIView):
             name = self.kwargs.pop('name', '')
             instance = get_object_or_404(Char, name=name)
 
-        char = CharSerializer(instance).data
-        sources = [SourceSerializer(m).data for m in {i for i in instance.location.all()}]
-
-        return Response({
-            'char': char,
-            'sources': sources,
-        })
-
-    def put(self, request):
-        data = request.data
-        char = Char.objects.get(pk=data.get('char_id'))
-        source = Source.objects.get(pk=data.get('source_id'))
-        page = data.get('page_no')
-
-        char_in_source = CharInSource(source=source, char=char, page=page)
-        # char_in_source.save()
-
-        return Response(CharSerializer(char).data)
+        return instance
 
 
-class IndexView(generic.ListView):
-    template_name = "chars/index.html"
-    context_object_name = "recent_chars"
-
-    def get_queryset(self):
-        return Char.objects.all().order_by('-id')[:10]
-
-
-def search(request):
-    if request.POST["char"] == "":
-        return HttpResponseRedirect(reverse('chars:index'))
-
-    return HttpResponseRedirect(reverse('chars:results', args=(request.POST["char"],)))
-
-
-class ResultsView(generic.ListView):
-    template_name = "chars/results.html"
-    context_object_name = "chars"
-    slug_field = 'name'
-
-    def get_queryset(self):
-        char = self.kwargs.pop('slug', '')
-        object_list = get_list_or_404(Char, name=char)
-        return object_list
-
-    def render_to_response(self, context):
-        if len(self.object_list) == 1:
-            return HttpResponseRedirect(reverse('chars:details', args=(self.char,)))
-        return super(ResultsView, self).render_to_response(context)
-
-
-class DetailsView(generic.DetailView):
-    model = Char
-    template_name = "chars/details.html"
-    context_object_name = "char"
-    slug_field = "name"
-    pk_field = "pk"
-
-    def get_object(self):
-        pk = self.kwargs.pop('pk', None)
-        if pk:
-            return get_object_or_404(Char, pk=pk)
-
-        char = self.kwargs.pop('slug', '')
-        return get_object_or_404(Char, name=char)
-
+###
+# Only for static admin page
 
 @staff_member_required
 def bulk_view(request):
@@ -233,12 +183,18 @@ def bulk_view(request):
         return render(request, 'admin/bulk.html', context)
 
 
+###
+# Generates a presigned url that allows direct uploads
+# to S3 without passing through the backend and without
+# exposing credentials.
+
 @csrf_exempt
 @api_view(('POST',))
-def generate_aws_v4_signature(request):
+def generate_presigned_s3_url(request):
     data = json.loads(request.body)
-    filetype = data['filetype']
-    filename = data['filename']
+    filetype = data['filetype']  # helps constrain uploaded data
+    filename = data['filename']  # must contain path relative to bucket
+
     s3 = boto3.client(
         's3',
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,

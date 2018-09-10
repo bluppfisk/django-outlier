@@ -35,13 +35,12 @@ export class OutlierNavComponent {
     this.term = "";
   }
 
-
   performSearch(term: string) {
     this.showRecents = false;
     this.charService.searchChar(term)
         .subscribe(data => {
             if (data) {
-              var id: string = data.char.id;
+              var id: string = data.id;
               this.router.navigate(["char/" + id]);
             } else {
               this.router.navigate(["char/0"]);

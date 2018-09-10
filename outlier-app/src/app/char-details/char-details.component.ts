@@ -69,7 +69,7 @@ export class CharDetailsComponent implements OnInit {
 
   	this.charService.getChar(id)
   		.subscribe(char => {
-        this.char = char.char;
+        this.char = char;
       }
     );
   }
