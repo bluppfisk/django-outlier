@@ -9,3 +9,4 @@ pip-selfcheck.json
 .env
 node_modules/
 .vscode/
+.pytest_cache/
