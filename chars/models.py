@@ -75,7 +75,10 @@ class AltChar(models.Model):
 
         if "data:image/png;base64" in self.image:
             # freshly pasted: upload
-            StorageHandler.base64_to_s3(self.image, settings.ALTCHAR_PATH, filename)
+            StorageHandler.base64_to_s3(
+                                        self.image,
+                                        settings.ALTCHAR_PATH,
+                                        filename)
         else:
             # compare newly computed filename with one in database
             # and rename file on S3 instead

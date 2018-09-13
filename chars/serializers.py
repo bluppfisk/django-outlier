@@ -7,7 +7,8 @@ class AltCharSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AltChar
-        fields = ('id', 'name', 'image', 'source', 'page', 'sequence_no', 'source_obj',)
+        fields = ('id', 'name', 'image', 'source',
+                  'page', 'sequence_no', 'source_obj',)
         depth = 1
 
     def get_image(self, obj):
@@ -19,7 +20,8 @@ class AltCharMiniSerializer(AltCharSerializer):
 
     class Meta:
         model = AltChar
-        fields = ('id', 'name', 'image', 'source', 'page', 'sequence_no', 'source_obj',)
+        fields = ('id', 'name', 'image', 'source',
+                  'page', 'sequence_no', 'source_obj',)
         depth = 0
 
     def get_image(self, obj):
