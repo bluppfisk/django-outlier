@@ -3,10 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CharService } from '../char.service';
 import { SourceService } from '../source.service';
 import { Char } from '../char';
-import { Source } from '../source';
-import { AltChar } from '../altchar';
 import { Location } from '../location';
-import { AltCharFormComponent } from '../alt-char-form/alt-char-form.component';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -17,7 +14,7 @@ import { Subscription } from 'rxjs';
 
 export class CharDetailsComponent implements OnInit {
 	@Input() char: Char;
-  private selectedLocation: Location;
+  selectedLocation: Location;
   private routeSubscription: Subscription;
 
   constructor(
@@ -54,14 +51,14 @@ export class CharDetailsComponent implements OnInit {
       });
   }
 
-  deleteLocation(location: Location): void {
+  deleteLocation(location: Location) {
     this.charService.deleteLocation(location, this.char)
-      .subscribe(data => {
+      .subscribe(_ => {
         this.char.locations = this.char.locations.filter(l => l != location);
       });
   }
 
-  getChar(id: number): void {
+  getChar(id: number) {
   	if (id == 0) {
   		this.char = null;
   		return;
@@ -74,7 +71,7 @@ export class CharDetailsComponent implements OnInit {
     );
   }
 
-  locationSelected(location: Location): void {
+  locationSelected(location: Location) {
     this.selectedLocation = location;
   }
 }

@@ -12,10 +12,10 @@ import { SourceService } from '../source.service';
 
 export class SourceFormComponent implements OnInit {
 	@Input() source: Source;
-	private editing: boolean = false;
-  private uploading: boolean = false;
-  private sourceFile: File = null;
-  private pathPrefix: string = environment.s3URL + environment.sourcePath;
+	editing: boolean = false;
+  uploading: boolean = false;
+  sourceFile: File = null;
+  pathPrefix: string = environment.s3URL + environment.sourcePath;
 
   constructor(private sourceService: SourceService) { }
 

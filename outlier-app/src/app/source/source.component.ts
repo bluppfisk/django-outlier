@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 
 import { SourceService } from '../source.service';
-import { Source } from '../source';
 
 @Component({
   selector: 'source',

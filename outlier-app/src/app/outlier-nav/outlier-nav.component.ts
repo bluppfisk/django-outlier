@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { UserService } from '../user.service';
@@ -12,9 +11,9 @@ import { CharService } from '../char.service';
 })
 
 export class OutlierNavComponent {
-  private term: string = "";
-  private recents: string[] = [];
-  private showRecents: boolean = false;
+  term: string = "";
+  recents: string[] = [];
+  showRecents: boolean = false;
     
   constructor(
     private userService: UserService,
@@ -22,11 +21,11 @@ export class OutlierNavComponent {
     private router: Router,
    ) {}
 
-  searchRecent(term: string): void {
+  searchRecent(term: string) {
     this.performSearch(term);
   }
 
-  search(): void {
+  search() {
     if (this.term == "") {
       return;
     }
@@ -35,7 +34,7 @@ export class OutlierNavComponent {
     this.term = "";
   }
 
-  performSearch(term: string) {
+  private performSearch(term: string) {
     this.showRecents = false;
     this.charService.searchChar(term)
         .subscribe(data => {
@@ -48,7 +47,7 @@ export class OutlierNavComponent {
      });
   }
 
-  logout(): void {
+  logout() {
     this.userService.logout();
   }
 }

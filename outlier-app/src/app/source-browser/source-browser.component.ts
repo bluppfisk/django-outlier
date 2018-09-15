@@ -1,6 +1,6 @@
 import { environment } from '../../environments/environment';
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Location } from '../location';
 
@@ -10,8 +10,8 @@ import { Location } from '../location';
   styleUrls: ['./source-browser.component.css']
 })
 
-export class SourceBrowserComponent implements OnInit {
-  private safeLocation: SafeResourceUrl;
+export class SourceBrowserComponent {
+  safeLocation: SafeResourceUrl;
 
   @Input()
   set location(location: Location) {
@@ -24,10 +24,5 @@ export class SourceBrowserComponent implements OnInit {
   }
   
   constructor(private sanitizer: DomSanitizer) { }
-
-
-  ngOnInit() {
-  
-  }
 
 }
