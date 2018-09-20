@@ -24,8 +24,6 @@ from .utils import CSVFileReader, LocationSourceMapper
 ###
 # Receives a CSV file with character => [page, source] mappings
 # and a Source object to be processed by LocationSourceMapper
-
-
 class MapperAPIView(generics.GenericAPIView):
     parser_classes = (FileUploadParser,)
 
@@ -40,8 +38,6 @@ class MapperAPIView(generics.GenericAPIView):
 
 ###
 # Deals with creating, updating and deleting historical forms of characters
-
-
 class AltCharAPIView(generics.GenericAPIView):
     serializer_class = AltCharSerializer
     queryset = AltChar.objects.all()
@@ -96,8 +92,6 @@ class AltCharAPIView(generics.GenericAPIView):
 
 ##
 # CRUD for Location (character => [source, page])
-
-
 class LocationAPIView(generics.GenericAPIView):
     serializer_class = CharInSourceSerializer
     queryset = CharInSource.objects.all()
@@ -128,8 +122,6 @@ class LocationAPIView(generics.GenericAPIView):
 
 ###
 # Create, Read and Update for Source objects
-
-
 class SourceAPIView(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         sources = Source.objects.all()
@@ -152,8 +144,6 @@ class SourceAPIView(generics.GenericAPIView):
 
 ###
 # A bit more DRF-like, using actual DestroyAPIView
-
-
 class SourceDeleteAPIView(generics.DestroyAPIView):
     lookup_field = "pk"
     queryset = Source.objects.all()
@@ -161,8 +151,6 @@ class SourceDeleteAPIView(generics.DestroyAPIView):
 
 ###
 # Returns a Character object with its details
-
-
 class CharAPIView(generics.RetrieveAPIView):
     serializer_class = CharSerializer
 
@@ -180,8 +168,6 @@ class CharAPIView(generics.RetrieveAPIView):
 
 ###
 # Only for static admin page
-
-
 @staff_member_required
 def bulk_view(request):
     if request.method == "POST":
@@ -205,8 +191,6 @@ def bulk_view(request):
 # Generates a presigned url that allows direct uploads
 # to S3 without passing through the backend and without
 # exposing credentials.
-
-
 @csrf_exempt
 @api_view(("POST",))
 def generate_presigned_s3_url(request):

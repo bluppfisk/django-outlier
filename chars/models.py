@@ -9,7 +9,7 @@ from .utils import StorageHandler
 class Source(models.Model):
     title = models.CharField(max_length=200, unique=True)
     author = models.CharField(max_length=200)
-    file = S3DirectField(dest='sources', max_length=255)
+    file = S3DirectField(dest="sources", max_length=255)
     offset = models.IntegerField(default=0)
 
     def delete(self, *args, **kwargs):
@@ -21,25 +21,25 @@ class Source(models.Model):
             settings.AWS_ACCESS_URL,
             settings.AWS_STORAGE_BUCKET_NAME,
             settings.SOURCE_PATH,
-            self.file
+            self.file,
         )
 
     def __str__(self):
         return self.title + " by " + self.author
 
     class Meta:
-        ordering = ['title']
+        ordering = ["title"]
 
 
 class Char(models.Model):
     name = models.CharField(max_length=1, unique=True)
-    location = models.ManyToManyField(Source, through='CharInSource')
+    location = models.ManyToManyField(Source, through="CharInSource")
 
     def __str__(self):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
 
 class CharInSource(models.Model):
@@ -48,14 +48,10 @@ class CharInSource(models.Model):
     page = models.IntegerField()
 
     def __str__(self):
-        return "{} in {} on page {}".format(
-            self.char.name,
-            self.source.title,
-            self.page
-        )
+        return "{} in {} on page {}".format(self.char.name, self.source.title, self.page)
 
     class Meta:
-        ordering = ['pk']
+        ordering = ["pk"]
 
 
 class AltChar(models.Model):
@@ -75,10 +71,7 @@ class AltChar(models.Model):
 
         if "data:image/png;base64" in self.image:
             # freshly pasted: upload
-            StorageHandler.base64_to_s3(
-                                        self.image,
-                                        settings.ALTCHAR_PATH,
-                                        filename)
+            StorageHandler.base64_to_s3(self.image, settings.ALTCHAR_PATH, filename)
         else:
             # compare newly computed filename with one in database
             # and rename file on S3 instead
@@ -86,7 +79,7 @@ class AltChar(models.Model):
             if original_image != filename:
                 StorageHandler.rename_object(
                     settings.ALTCHAR_PATH + original_image,
-                    settings.ALTCHAR_PATH + filename
+                    settings.ALTCHAR_PATH + filename,
                 )
 
         # below misleads the browser cache after a save operation
@@ -104,7 +97,7 @@ class AltChar(models.Model):
             settings.AWS_ACCESS_URL,
             settings.AWS_STORAGE_BUCKET_NAME,
             settings.ALTCHAR_PATH,
-            image
+            image,
         )
 
     def get_filename(self):
@@ -113,11 +106,11 @@ class AltChar(models.Model):
             self.sequence_no,
             self.source.title,
             self.page,
-            self.source_obj
+            self.source_obj,
         )
-        keepcharacters = (' ', '.', '_', '-')
+        keepcharacters = (" ", ".", "_", "-")
         return "".join(c for c in filename if c.isalnum() or c in keepcharacters).rstrip()
 
     class Meta:
-        ordering = ['id']
-        unique_together = ('canonical', 'sequence_no', 'page', 'source', 'name', )
+        ordering = ["id"]
+        unique_together = ("canonical", "sequence_no", "page", "source", "name")

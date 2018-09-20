@@ -19,7 +19,8 @@ class StorageHandler:
         s3 = cls.get_s3_resource()
         print("copying", old_path, "to", new_path)
         s3.Object(settings.AWS_STORAGE_BUCKET_NAME, new_path).copy_from(
-            CopySource=settings.AWS_STORAGE_BUCKET_NAME + "/" + old_path)
+            CopySource=settings.AWS_STORAGE_BUCKET_NAME + "/" + old_path
+        )
         print("deleting", old_path)
         s3.Object(settings.AWS_STORAGE_BUCKET_NAME, old_path).delete()
 
@@ -31,9 +32,9 @@ class StorageHandler:
     @classmethod
     def get_s3_resource(cls):
         return boto3.resource(
-            's3',
+            "s3",
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
         )
 
 
@@ -43,7 +44,7 @@ class CSVFileReader:
         file.seek(0)
         data = []
         for line in file.readlines():
-            data.append(line.decode('utf-8'))
+            data.append(line.decode("utf-8"))
 
         return data
 
@@ -51,32 +52,26 @@ class CSVFileReader:
 class LocationSourceMapper:
     @staticmethod
     def map(locations=None, source=None):
-        Char = apps.get_model('chars', 'Char')
-        CharInSource = apps.get_model('chars', 'CharInSource')
+        Char = apps.get_model("chars", "Char")
+        CharInSource = apps.get_model("chars", "CharInSource")
 
         to_be_added = []
         for item in locations:
-            data = item.split(',')
+            data = item.split(",")
             name = data[0]
             if len(name) > 1:
                 continue  # any faulty characters
-            page = data[1].split('\n')[0]
+            page = data[1].split("\n")[0]
 
-            char, c_created = Char.objects.get_or_create(
-                name=name,
-            )
+            char, c_created = Char.objects.get_or_create(name=name)
 
             location, l_created = CharInSource.objects.get_or_create(
-                source=source,
-                page=page,
-                char=char
+                source=source, page=page, char=char
             )
 
             if l_created or c_created:
-                to_be_added.append({
-                    'source': location.source,
-                    'location': location.page,
-                    'char': char
-                })
+                to_be_added.append(
+                    {"source": location.source, "location": location.page, "char": char}
+                )
 
         return to_be_added

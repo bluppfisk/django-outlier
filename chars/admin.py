@@ -15,10 +15,7 @@ class AltCharInline(admin.TabularInline):
 
 
 class CharAdmin(admin.ModelAdmin):
-    inlines = [
-        LocationInline,
-        AltCharInline,
-    ]
+    inlines = [LocationInline, AltCharInline]
 
 
 class BulkUpload(forms.Form):
@@ -26,10 +23,9 @@ class BulkUpload(forms.Form):
     source = forms.ModelChoiceField(queryset=Source.objects.all())
 
     def save(self):
-        locations = CSVFileReader.read(self.cleaned_data['file'])
+        locations = CSVFileReader.read(self.cleaned_data["file"])
         map = LocationSourceMapper.map(
-            locations=locations,
-            source=self.cleaned_data['source']
+            locations=locations, source=self.cleaned_data["source"]
         )
         return map
 
