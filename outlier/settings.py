@@ -26,131 +26,112 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 's99uxf-c%td#%^(pl@i@@^9@cnb9(qneu=hbiqz(h2o#t4cnf3'
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = bool(config('DEBUG'))
+SECRET_KEY = config("SECRET_KEY")
+DEBUG = bool(config("DEBUG"))
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'djng',
-    'glue64',
-    's3direct',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'chars.apps.CharsConfig',
-    'rest_framework',
-    'corsheaders',
+    "djng",
+    "glue64",
+    "s3direct",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "chars.apps.CharsConfig",
+    "rest_framework",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:4200',
-)
+CORS_ORIGIN_WHITELIST = ("localhost:4200",)
 
-CORS_ALLOW_HEADERS = (
-    'content-type',
-    'content-disposition',
-    'authorization',
-)
+CORS_ALLOW_HEADERS = ("content-type", "content-disposition", "authorization")
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
     ),
 }
 
-JWT_AUTH = {
-    'JWT_ALLOW_REFRESH': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
-}
+JWT_AUTH = {"JWT_ALLOW_REFRESH": True, "JWT_EXPIRATION_DELTA": datetime.timedelta(days=7)}
 
-ROOT_URLCONF = 'outlier.urls'
+ROOT_URLCONF = "outlier.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ]
         },
-    },
+    }
 ]
 
-WSGI_APPLICATION = 'outlier.wsgi.application'
+WSGI_APPLICATION = "outlier.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASS'),
-        'HOST': '',
-        'PORT': ''
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASS"),
+        "HOST": "",
+        "PORT": "",
     }
 }
 
 db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+DATABASES["default"].update(db_from_env)
 
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'CET'
+TIME_ZONE = "CET"
 
 USE_I18N = True
 
@@ -162,30 +143,28 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
-MEDIA_URL = '/uploads/'
+MEDIA_URL = "/uploads/"
 
-MEDIA_ROOT = 'uploads'
+MEDIA_ROOT = "uploads"
 
 ALTCHAR_PATH = "uploads/altchars/"
 SOURCE_PATH = "uploads/sources/"
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(PROJECT_DIR, "static")
+STATICFILES_STORAGE = "whitenoise.django.GzipManifestStaticFilesStorage"
 
-AWS_ACCESS_URL = config('AWS_ACCESS_URL', "https://s3.eu-west-2.amazonaws.com/")
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = config('S3_BUCKET', "outlier-linguistics")
-S3DIRECT_REGION = config('S3_REGION')
+AWS_ACCESS_URL = config("AWS_ACCESS_URL", "https://s3.ap-northeast-1.amazonaws.com/")
+AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = config("S3_BUCKET", "outlier-linguistics-ap")
+S3DIRECT_REGION = config("S3_REGION", "ap-northeast-1")
 
 # For Angular
 
-STATICFILES_DIRS = [
-    ('node_modules', os.path.join(BASE_DIR, 'node_modules')),
-]
+STATICFILES_DIRS = [("node_modules", os.path.join(BASE_DIR, "node_modules"))]
 
 
 # Destinations, with the following keys:
@@ -204,30 +183,28 @@ STATICFILES_DIRS = [
 # server_side_encryption [optional] Encryption headers for buckets that require it.
 
 
-
 S3DIRECT_DESTINATIONS = {
-    'sources': {
+    "sources": {
         # REQUIRED
-        'key': 'uploads/sources',
-
+        "key": "uploads/sources",
         # OPTIONAL
-        'auth': lambda u: u.is_staff,  # Default allow anybody to upload
-        'allowed': ['application/pdf'],  # Default allow all mime types
-        'bucket': 'outlier-linguistics',  # Default is 'AWS_STORAGE_BUCKET_NAME'
-        'acl': 'private',  # Defaults to 'public-read'
-        'cache_control': 'max-age=2592000',  # Default no cache-control
-        'content_disposition': 'inline',  # Default no content disposition
-        'content_length_range': (5000, 200000000),  # Default allow any size
-        'server_side_encryption': 'AES256',  # Default no encryption
+        "auth": lambda u: u.is_staff,  # Default allow anybody to upload
+        "allowed": ["application/pdf"],  # Default allow all mime types
+        "bucket": "outlier-linguistics-ap",  # Default is 'AWS_STORAGE_BUCKET_NAME'
+        "acl": "private",  # Defaults to 'public-read'
+        "cache_control": "max-age=2592000",  # Default no cache-control
+        "content_disposition": "inline",  # Default no content disposition
+        "content_length_range": (5000, 200000000),  # Default allow any size
+        "server_side_encryption": "AES256",  # Default no encryption
     },
-    'altchars': {
-        'key': 'uploads/altchars',
-        'allowed': ['image/jpeg', 'image/png'],
-        'bucket': 'outlier-linguistics',
-        'cache_control': 'max-age=2592000',  # Default no cache-control
+    "altchars": {
+        "key": "uploads/altchars",
+        "allowed": ["image/jpeg", "image/png"],
+        "bucket": "outlier-linguistics-ap",
+        "cache_control": "max-age=2592000",  # Default no cache-control
     },
-    'example_other': {
-        'key': lambda filename, args: args + '/' + filename,
-        'key_args': 'uploads/images',  # Only if 'key' is a function
-    }
+    "example_other": {
+        "key": lambda filename, args: args + "/" + filename,
+        "key_args": "uploads/images",  # Only if 'key' is a function
+    },
 }
