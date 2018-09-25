@@ -29,9 +29,39 @@ class StorageHandler:
         s3 = cls.get_s3_resource()
         s3.Object(settings.AWS_STORAGE_BUCKET_NAME, path).delete()
 
+    # There is no such thing as a folder in Amazon S3. Metaphorical function :)
+    # https://stackoverflow.com/questions/11426560/amazon-s3-boto-how-to-delete-folder/43436769#43436769
+    @classmethod
+    def delete_folder(cls, path):
+        bucket = settings.AWS_STORAGE_BUCKET_NAME
+        s3 = cls.get_s3_client()
+        paginator = s3.get_paginator("list_objects_v2")
+        pages = paginator.paginate(Bucket=bucket, Prefix=path + "/")
+
+        delete_us = dict(Objects=[])
+        for item in pages.search("Contents"):
+            delete_us["Objects"].append(dict(Key=item["Key"]))
+
+            # flush once aws limit reached
+            if len(delete_us["Objects"]) >= 1000:
+                s3.delete_objects(Bucket=bucket, Delete=delete_us)
+                delete_us = dict(Objects=[])
+
+        # flush rest
+        if len(delete_us["Objects"]):
+            s3.delete_objects(Bucket=bucket, Delete=delete_us)
+
     @classmethod
     def get_s3_resource(cls):
         return boto3.resource(
+            "s3",
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        )
+
+    @classmethod
+    def get_s3_client(cls):
+        return boto3.client(
             "s3",
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,

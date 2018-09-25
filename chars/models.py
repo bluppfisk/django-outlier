@@ -14,6 +14,7 @@ class Source(models.Model):
 
     def delete(self, *args, **kwargs):
         StorageHandler.delete_object(settings.SOURCE_PATH + self.file)
+        StorageHandler.delete_folder(settings.SOURCE_PATH + self.file)
         super(Source, self).delete(*args, **kwargs)
 
     def get_full_file_path(self):
