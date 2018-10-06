@@ -21,8 +21,9 @@
   "homepage": "https://github.com/bluppfisk/django-outlier#readme",
   "dependencies": {
     "@angular/cli": "^6.0.8",
+    "cryptiles": "^4.1.2",
     "moment": "^2.22.2",
-    "npm": "^6.1.0"
+    "npm": "^6.4.1"
   },
   "devDependencies": {}
 }
