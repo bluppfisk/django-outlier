@@ -10,3 +10,9 @@ pip-selfcheck.json
 node_modules/
 .vscode/
 .pytest_cache/
+lambda-splitpdf/lib64
+lambda-splitpdf/splitPdf.zip
+lambda-splitpdf/bin
+lamdba-splitpdf/include
+lambda-splitpdf/lib
+.gitignore
