@@ -16,4 +16,3 @@ lambda-splitpdf/bin
 lamdba-splitpdf/include
 lambda-splitpdf/lib
 .gitignore
-static/

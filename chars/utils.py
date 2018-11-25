@@ -37,6 +37,7 @@ class StorageHandler:
         s3 = cls.get_s3_client()
         paginator = s3.get_paginator("list_objects_v2")
         pages = paginator.paginate(Bucket=bucket, Prefix=path + "/")
+        print(pages.search("Contents"))
 
         delete_us = dict(Objects=[])
         for item in pages.search("Contents"):
