@@ -10,6 +10,6 @@ import { SourceService } from '../source.service';
 
 export class SourceComponent {
 
-  constructor(private sourceService: SourceService) { }
+  constructor(public sourceService: SourceService) { }
 
 }

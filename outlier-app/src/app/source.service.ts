@@ -21,7 +21,7 @@ export class SourceService {
 
   constructor(
     private http: HttpClient,
-    private userService: UserService,
+    public userService: UserService,
    ) { }
 
   public listSources(): Observable<Source[]> {

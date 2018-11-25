@@ -9,12 +9,12 @@ import { SourceService } from '../source.service';
 })
 
 export class CSVUploadFormComponent {
-	private error: string = null;
-	private source: Source = null;
-	private csvFile: File = null;
+	public error: string = null;
+	public source: Source = null;
+	public csvFile: File = null;
 
   constructor(
-  	private sourceService: SourceService
+  	public sourceService: SourceService
   ) { }
 
   handleFileInput(files: FileList) {

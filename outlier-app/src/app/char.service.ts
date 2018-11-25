@@ -22,8 +22,8 @@ export class CharService {
 
   constructor(
     private http: HttpClient,
-    private userService: UserService,
-    private sourceService: SourceService
+    public userService: UserService,
+    public sourceService: SourceService
   ) {}
 
   getChar(id: number): Observable<any> {

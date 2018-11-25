@@ -5,7 +5,7 @@
 * create better source browser
 
 * error handling everywhere
-* split PDF files into separate jpg files (AWS lambda)
+* AWS Lambda also handle zip file uploads
 * get progress updates for large file uploads (EvaporateJS)
 * implement confirmation process for deletes (sources and altchars)
 * remove CORS headers

@@ -13,13 +13,13 @@ import { SourceService } from './source.service';
 
 export class AppComponent implements OnInit {
   title = "Outlier Tool";
-  private username: string = "";
-  private password: string = "";
-  private showSpinner: boolean = false;
+  public username: string = "";
+  public password: string = "";
+  public showSpinner: boolean = false;
 
   constructor (
-    private userService: UserService,
-    private sourceService: SourceService
+    public userService: UserService,
+    public sourceService: SourceService
   ) {}
 
   ngOnInit() {

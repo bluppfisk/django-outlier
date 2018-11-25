@@ -10,7 +10,7 @@ import { LoaderService } from '../loader.service';
   styleUrls: ['./loader.component.css']
 })
 export class LoaderComponent implements OnInit {
-	private isLoading: boolean = false;
+	public isLoading: boolean = false;
 	private loaderSubscription: Subscription = null;
 
   constructor(private loaderService: LoaderService) { }
