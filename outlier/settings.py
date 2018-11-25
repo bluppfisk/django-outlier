@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "chars.apps.CharsConfig",
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
 ]
 
@@ -61,7 +62,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-CORS_ORIGIN_WHITELIST = ("localhost:4200",)
+CORS_ORIGIN_WHITELIST = ("outlier.blaap.be", "localhost:4200")
 
 CORS_ALLOW_HEADERS = ("content-type", "content-disposition", "authorization")
 
@@ -164,7 +165,12 @@ S3DIRECT_REGION = config("S3_REGION", "ap-northeast-1")
 
 # For Angular
 
-STATICFILES_DIRS = [("node_modules", os.path.join(BASE_DIR, "node_modules"))]
+ANGULAR_APP_DIR = os.path.join(BASE_DIR, 'static/front-end')
+
+STATICFILES_DIRS = [
+    # ("node_modules", os.path.join(BASE_DIR, "node_modules")),
+    os.path.join(ANGULAR_APP_DIR),
+]
 
 
 # Destinations, with the following keys:

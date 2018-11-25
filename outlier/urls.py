@@ -17,10 +17,15 @@ from django.contrib import admin
 from django.urls import include, path
 
 from django.conf import settings
+from django.conf.urls import url
 from django.conf.urls.static import static
+from django.contrib.staticfiles.views import serve
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('s3direct/', include('s3direct.urls')),
     path('admin/', admin.site.urls),
-    path('', include('chars.urls')),
+    path('api/', include('chars.urls')),
+    url(r'^$', serve, kwargs={'path': 'index.html'}),
+    url(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$', RedirectView.as_view(url='/static/%(path)s', permanent=False)),
 ] + static('uploads/', document_root=settings.MEDIA_ROOT)
