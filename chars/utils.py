@@ -26,8 +26,11 @@ class StorageHandler:
 
     @classmethod
     def delete_object(cls, path):
-        s3 = cls.get_s3_resource()
-        s3.Object(settings.AWS_STORAGE_BUCKET_NAME, path).delete()
+        try:
+            s3 = cls.get_s3_resource()
+            s3.Object(settings.AWS_STORAGE_BUCKET_NAME, path).delete()
+        except:
+            print("Error deleting")
 
     # There is no such thing as a folder in Amazon S3. Metaphorical function :)
     # https://stackoverflow.com/questions/11426560/amazon-s3-boto-how-to-delete-folder/43436769#43436769
@@ -41,6 +44,7 @@ class StorageHandler:
         delete_us = dict(Objects=[])
         for item in pages.search("Contents"):
             if not item:
+                print("Folder not available")
                 continue
             delete_us["Objects"].append(dict(Key=item["Key"]))
 
