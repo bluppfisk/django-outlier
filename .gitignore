@@ -17,3 +17,4 @@ lamdba-splitpdf/include
 lambda-splitpdf/lib
 .gitignore
 static/
+logs/
