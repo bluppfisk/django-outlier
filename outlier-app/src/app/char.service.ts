@@ -24,10 +24,10 @@ export class CharService {
     private http: HttpClient,
     public userService: UserService,
     public sourceService: SourceService
-  ) {}
+  ) { }
 
   getChar(id: number): Observable<any> {
-  	const url = charUrl + id;
+    const url = charUrl + id + '/';
 
     const httpOptions = {
       headers: new HttpHeaders({
@@ -36,18 +36,18 @@ export class CharService {
       })
     };
 
-  	return this.http.get<any>(url, httpOptions).pipe(
-		tap(data => {
-      data.locations.forEach((location, index, locations) => {
-        locations[index].source = this.sourceService.findSourceById(location.source);
-      });
-      data.altchars.forEach((altchar, index, altchars) => {
-        altchars[index].source = this.sourceService.findSourceById(altchar.source);
-      });
-      data = new Char().deserialise(data);
-		}),
-		catchError(this.handleError<any>('getChar id=${id}'))
-  	);
+    return this.http.get<any>(url, httpOptions).pipe(
+      tap(data => {
+        data.locations.forEach((location, index, locations) => {
+          locations[index].source = this.sourceService.findSourceById(location.source);
+        });
+        data.altchars.forEach((altchar, index, altchars) => {
+          altchars[index].source = this.sourceService.findSourceById(altchar.source);
+        });
+        data = new Char().deserialise(data);
+      }),
+      catchError(this.handleError<any>('getChar id=${id}'))
+    );
   }
 
   addLocation(newLocation: Location, char: Char): Observable<Char> {
@@ -111,11 +111,11 @@ export class CharService {
   }
 
   searchChar(term: string): Observable<any> {
-  	if (!term.trim()) {
-  		return of();
-  	}
+    if (!term.trim()) {
+      return of();
+    }
 
-  	term = term.trim();
+    term = term.trim();
 
     var httpOptions = {
       headers: new HttpHeaders({
@@ -124,22 +124,22 @@ export class CharService {
       })
     };
 
-  	return this.http.get<any>(charUrl + term + '/', httpOptions).pipe(
-  		tap(_ => {
+    return this.http.get<any>(charUrl + term + '/', httpOptions).pipe(
+      tap(_ => {
         this.log(`matching char found`);
-       }),
-  		catchError(this.handleError<any>('searchChar'))
-  	);
+      }),
+      catchError(this.handleError<any>('searchChar'))
+    );
   }
 
-  private handleError<T> (operation = 'operation', result?: T) {
-  	return (error: any): Observable<T> => {
-  		console.log(`${operation} failed: ${error.message}`);
-  		return of(result as T);
-  	};
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.log(`${operation} failed: ${error.message}`);
+      return of(result as T);
+    };
   }
 
   private log(phrase: string): void {
-  	console.log(phrase);
+    console.log(phrase);
   }
 }
