@@ -4,7 +4,6 @@ uploads/*
 bin/
 lib/
 include/
-outlier/static/*
 pip-selfcheck.json
 .env
 node_modules/
@@ -16,5 +15,4 @@ lambda-splitpdf/bin
 lamdba-splitpdf/include
 lambda-splitpdf/lib
 .gitignore
-static/
 logs/

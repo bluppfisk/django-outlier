@@ -1,0 +1,11 @@
+.glue64_target {
+	display: inline-block;
+	border: 2px dashed black;
+	width: 100px;
+	height: 100px;
+}
+
+.glue64_preview {
+	max-width: 100px;
+	pointer-events: none;
+}
