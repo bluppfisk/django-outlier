@@ -23,12 +23,12 @@ from django.contrib.staticfiles.views import serve
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    path('s3direct/', include('s3direct.urls')),
-    path('admin/', admin.site.urls),
-    path('api/', include('chars.urls')),
-#    url(r'^$', serve, kwargs={'path': 'index.html'}),
-    
-    url(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$', RedirectView.as_view(url='/static/%(path)s', permanent=False)),
-    url(r'^(?P<path>.*)$', serve, kwargs={'path': 'index.html'}),
-    
-] + static('uploads/', document_root=settings.MEDIA_ROOT)
+    path("s3direct/", include("s3direct.urls")),
+    path("admin/", admin.site.urls),
+    path("api/", include("chars.urls")),
+    url(
+        r"^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$",
+        RedirectView.as_view(url="/static/%(path)s", permanent=False),
+    ),
+    url(r"^(?P<path>.*)$", serve, kwargs={"path": "index.html"}),
+] + static("uploads/", document_root=settings.MEDIA_ROOT)

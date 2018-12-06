@@ -32,9 +32,7 @@ urlpatterns = [
     ),
     path("source/", views.SourceAPIView.as_view(), name="source-api"),
     path(
-        "source/<int:pk>",
-        views.SourceDeleteAPIView.as_view(),
-        name="source-delete-api",
+        "source/<int:pk>", views.SourceDeleteAPIView.as_view(), name="source-delete-api"
     ),
     path(
         "source/<int:pk>/locationMapper/",
