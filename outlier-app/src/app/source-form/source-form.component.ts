@@ -1,9 +1,8 @@
 import { environment } from '../../environments/environment';
 
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Source } from '../source';
 import { SourceService } from '../source.service';
-import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'source-form',
@@ -12,9 +11,8 @@ import { HttpEventType } from '@angular/common/http';
 })
 
 export class SourceFormComponent implements OnInit {
-  @Input() source: Source;
-  percentDone: number = 0;
-  editing: boolean = false;
+	@Input() source: Source;
+	editing: boolean = false;
   uploading: boolean = false;
   sourceFile: File = null;
   pathPrefix: string = environment.s3URL + environment.sourcePath;
@@ -22,10 +20,10 @@ export class SourceFormComponent implements OnInit {
   constructor(private sourceService: SourceService) { }
 
   ngOnInit() {
-    if (this.source === undefined) {
-      this.source = Object.assign(new Source(), Source.EMPTY_MODEL);
-      this.editing = true;
-    }
+  	if (this.source === undefined) {
+  		this.source = Object.assign(new Source(), Source.EMPTY_MODEL);
+  		this.editing = true;
+  	}
 
     if (!this.source.id) {
       this.editing = true;
@@ -47,23 +45,16 @@ export class SourceFormComponent implements OnInit {
       this.sourceService.getPresignedURL(this.sourceFile)
         .subscribe(presignedURL => {
           this.sourceService.uploadToS3(this.sourceFile, presignedURL)
-            .subscribe(event => {
-              if (event.type === HttpEventType.UploadProgress) {
-                this.percentDone = Math.round(100 * event.loaded / event.total);
-              }
-              if (event.type === HttpEventType.Response) {
-                this.source.file = this.sourceFile.name;
-                this.uploading = false;
-                this.sourceService.updateSource(this.source).subscribe(_ => {
-                  this.sourceFile = null;
-                });
-              }
-            })
+            .subscribe(_ => {
+              this.source.file = this.sourceFile.name;
+              this.uploading = false;
+              this.sourceService.updateSource(this.source).subscribe(_ => this.sourceFile = null);
+            })   
         })
-    } else {
-      this.sourceService.updateSource(this.source).subscribe();
+      } else {
+        this.sourceService.updateSource(this.source).subscribe();
+      }
     }
-  }
 
   deleteSource() {
     this.sourceService.deleteSource(this.source).subscribe();
@@ -76,30 +67,25 @@ export class SourceFormComponent implements OnInit {
     this.sourceService.getPresignedURL(this.sourceFile)
       .subscribe(presignedURL => {
         this.sourceService.uploadToS3(this.sourceFile, presignedURL)
-          .subscribe(event => {
-            if (event.type === HttpEventType.UploadProgress) {
-              this.percentDone = Math.round(100 * event.loaded / event.total);
-            }
-            if (event.type === HttpEventType.Response) {
-              this.source.file = this.sourceFile.name;
-              this.uploading = false;
-              this.sourceService.addSource(this.source)
-                .subscribe(_ => {
-                  this.source = Object.assign(new Source(), Source.EMPTY_MODEL);
-                  this.sourceFile = null;
-                  this.editing = true;
-                });
-            }
-          })
+          .subscribe(_ => {
+            this.source.file = this.sourceFile.name;
+            this.uploading = false;
+            this.sourceService.addSource(this.source)
+              .subscribe(_ => {
+                this.source = Object.assign(new Source(), Source.EMPTY_MODEL);
+                this.sourceFile = null;
+                this.editing = true;
+              });
+          })   
       })
   }
 
   edit() {
-    this.editing = true;
+  	this.editing = true;
   }
 
   cancelEdit() {
-    this.editing = false;
+  	this.editing = false;
   }
 
 }

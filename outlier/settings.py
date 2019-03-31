@@ -165,11 +165,11 @@ S3DIRECT_REGION = config("S3_REGION", "ap-northeast-1")
 
 # For Angular
 
-ANGULAR_APP_DIR = os.path.join(BASE_DIR, "static/front-end")
+ANGULAR_APP_DIR = os.path.join(BASE_DIR, 'static/front-end')
 
 STATICFILES_DIRS = [
     # ("node_modules", os.path.join(BASE_DIR, "node_modules")),
-    os.path.join(ANGULAR_APP_DIR)
+    os.path.join(ANGULAR_APP_DIR),
 ]
 
 
