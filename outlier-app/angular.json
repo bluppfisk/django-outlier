@@ -29,7 +29,7 @@
               "src/styles.css"
             ],
             "scripts": [
-                "./node_modules/moment/min/moment.min.js"
+              "./node_modules/moment/min/moment.min.js"
             ]
           },
           "configurations": {
@@ -131,5 +131,10 @@
       }
     }
   },
-  "defaultProject": "outlier-app"
+  "defaultProject": "outlier-app",
+  "cli": {
+    "warnings": {
+      "typescriptMismatch": true
+    }
+  }
 }
