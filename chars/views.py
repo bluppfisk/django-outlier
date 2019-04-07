@@ -51,21 +51,6 @@ class AltCharAPIView(generics.GenericAPIView):
                 "canonical": Char.objects.get(pk=kwargs.pop("pk")),
             }
         )
-        # char = Char.objects.get(pk=kwargs.pop('pk'))
-        # ac = AltChar.objects.create(**data)
-        # serializer = AltCharSerializer(data=data)
-        # if serializer.is_valid():
-        #     print(serializer.validated_data)
-        #     ac = serializer.save()
-
-        # return Response(AltCharSerializer(ac).data)
-        # char = Char.objects.get(pk=kwargs.pop('pk'))
-        # ac = AltChar.objects.get(pk=kwargs.pop('ac_pk'))
-        # ac.update(**data)
-        # ac.source = Source.objects.get(pk=data.get('source'))
-        # ac.sequence_no = data.get('sequence_no')
-
-        # ac.save()
 
     def post(self, request, *args, **kwargs):
         char = Char.objects.get(pk=kwargs.pop("pk"))

@@ -3,13 +3,13 @@ from s3direct.fields import S3DirectField
 from glue64.fields import Glue64Field
 from django.conf import settings
 from random import randint
-from .utils import StorageHandler
+from .utils import S3StorageHandler as StorageHandler
 
 
 class Source(models.Model):
     title = models.CharField(max_length=200, unique=True)
     author = models.CharField(max_length=200)
-    file = S3DirectField(dest="sources", max_length=255)
+    file = S3DirectField(dest=settings.SOURCE_PATH)
     offset = models.IntegerField(default=0)
 
     def delete(self, *args, **kwargs):
@@ -24,9 +24,6 @@ class Source(models.Model):
             settings.SOURCE_PATH,
             self.file,
         )
-
-    def __str__(self):
-        return self.title + " by " + self.author
 
     class Meta:
         ordering = ["title"]
@@ -64,15 +61,12 @@ class AltChar(models.Model):
     page = models.IntegerField(default=0)
     image = Glue64Field(dest=settings.ALTCHAR_PATH)
 
-    def __str__(self):
-        return self.canonical.name + " (hist)"
-
     def save(self, *args, **kwargs):
         filename = self.get_filename()
 
         if "data:image/png;base64" in self.image:
             # freshly pasted: upload
-            StorageHandler.base64_to_s3(self.image, settings.ALTCHAR_PATH, filename)
+            StorageHandler.base64_upload(self.image, settings.ALTCHAR_PATH, filename)
         else:
             # compare newly computed filename with one in database
             # and rename file on S3 instead
@@ -83,7 +77,7 @@ class AltChar(models.Model):
                     settings.ALTCHAR_PATH + filename,
                 )
 
-        # below misleads the browser cache after a save operation
+        # below misleads the browser cache into refreshing the resource after a save operation
         self.image = "{}?{}".format(filename, randint(0, 3000))
 
         super(AltChar, self).save(*args, **kwargs)

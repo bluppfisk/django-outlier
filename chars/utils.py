@@ -2,11 +2,32 @@ from django.conf import settings
 from django.apps import apps
 import base64
 import boto3
+import os
 
 
-class StorageHandler:
+class LocalStorageHandler:
     @classmethod
-    def base64_to_s3(cls, data, path, filename):
+    def base64_upload(data, path, filename):
+        fh = open(path + filename, "xb")
+        fh.write(data)
+        fh.close()
+
+    @classmethod
+    def rename_object(old_path, new_path):
+        os.rename(old_path, new_path)
+
+    @classmethod
+    def delete_object(path):
+        os.unlink(path)
+
+    @classmethod
+    def delete_folder(path):
+        os.removedirs(path)
+
+
+class S3StorageHandler:
+    @classmethod
+    def base64_upload(cls, data, path, filename):
         if "base64," in data:
             data = data.replace("data:image/png;base64,", "")
         data = base64.b64decode(data)

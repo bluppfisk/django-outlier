@@ -30,3 +30,11 @@ iframe {
 	display: flex;
 	flex-flow: row wrap;
 }
+
+source-browser {
+	width: 50%;
+}
+
+.left-panel {
+	width: 50%;
+}
