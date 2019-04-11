@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CharService } from '../char.service';
 import { SourceService } from '../source.service';
@@ -13,13 +13,15 @@ import { Subscription } from 'rxjs';
 })
 
 export class CharDetailsComponent implements OnInit {
-	@Input() char: Char;
+  @Input() char: Char;
+  @Output() locationEvent = new EventEmitter<Location>();
+
   selectedLocation: Location;
   private routeSubscription: Subscription;
 
   constructor(
-  	private route: ActivatedRoute,
-  	private charService: CharService,
+    private route: ActivatedRoute,
+    private charService: CharService,
     private sourceService: SourceService,
   ) { }
 
@@ -59,19 +61,25 @@ export class CharDetailsComponent implements OnInit {
   }
 
   getChar(id: number) {
-  	if (id == 0) {
-  		this.char = null;
-  		return;
-  	}
+    if (id == 0) {
+      this.char = null;
+      return;
+    }
 
-  	this.charService.getChar(id)
-  		.subscribe(char => {
+    this.charService.getChar(id)
+      .subscribe(char => {
         this.char = char;
       }
-    );
+      );
   }
 
   locationSelected(location: Location) {
+    console.log(location);
     this.selectedLocation = location;
+  }
+
+  locationChanged(sourceId: number) {
+    var location: Location = this.char.locations.find(l => l.source.id == sourceId);
+    this.locationEvent.emit(location);
   }
 }

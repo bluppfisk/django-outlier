@@ -9,6 +9,7 @@
       <mat-list *ngFor="let location of char.locations">
         <mat-list-item>
           in {{ location.source.title }} on page {{ location.page }}
+          <button mat-button type="button" color="secondary" (click)="locationSelected(location)">Open</button>
           <button mat-button color="warn" (click)="deleteLocation(location)">Delete</button>
         </mat-list-item>
       </mat-list>
