@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { throwError } from 'rxjs';
-import * as moment from 'moment';
+import { Component } from '@angular/core';
 
 import { UserService } from './user.service';
 import { SourceService } from './source.service';
@@ -11,33 +9,36 @@ import { SourceService } from './source.service';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = "Outlier Tool";
   public username: string = "";
   public password: string = "";
   public showSpinner: boolean = false;
 
-  constructor (
+  constructor(
     public userService: UserService,
     public sourceService: SourceService
-  ) {}
-
-  ngOnInit() {
-    this.sourceService.listSources().subscribe();
-   }
+  ) { }
 
   login() {
-  	this.userService.login({
-  		'username': this.username,
-  		'password': this.password
-  	});
+    this.userService.login({
+      'username': this.username,
+      'password': this.password
+    }).subscribe(
+      data => {
+        if (this.userService.isLoggedIn()) {
+          console.log("Logged in... getting sources");
+          this.sourceService.listSources().subscribe();
+        }
+      }
+    );
   }
 
   refreshToken() {
-  	this.userService.refreshToken();
+    this.userService.refreshToken();
   }
 
   logout() {
-  	this.userService.logout();
+    this.userService.logout();
   }
 }
